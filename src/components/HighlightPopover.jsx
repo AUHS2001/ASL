@@ -3,7 +3,7 @@ import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { Chip } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 
 export default function HighlightPopover({
   children,
@@ -49,7 +49,7 @@ export default function HighlightPopover({
               sx={{
                 display: "flex",
                 width: "250px",
-                height: "250px",
+                height: `${videoLookUp?.data?"250px":"100px"}`,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -62,22 +62,40 @@ export default function HighlightPopover({
                     style={{
                       display: "flex",
                       flexDirection: "column",
+                      width: "100%",
+                      height: "100%",
                       justifyContent: "center",
-                      alignItem: "center",
+                      // alignItems: "center",
                     }}
                   >
-                    <Chip
-                      style={{ marginBottom: "5px", width: "250px" }}
+                   
+                    {videoLookUp?.data ? (
+                      <video
+                        src={videoLookUp?.data}
+                        style={{ width: "100%", height: "100%" }}
+                        controls
+                        autoPlay
+                      ></video>
+                    ) : (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent:"center"
+                        }}
+                      >
+                        <Typography component={"span"} style={{ textAlign: "center" }} fontSize={"0.9rem"}>
+                          Video not Found !
+                        </Typography>
+                      </div>
+                    )}
+                     <Chip
+                      style={{ margin: "5px auto", width: "80%" }}
                       label={selectedText.highlightText}
                       size="small"
                     />
-
-                    <video
-                      src={videoLookUp?.data}
-                      style={{ width: "100%", height: "100%" }}
-                      controls
-                      autoPlay
-                    ></video>
                   </div>
                 </>
               )}

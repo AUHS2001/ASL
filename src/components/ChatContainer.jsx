@@ -35,27 +35,8 @@ const ChatContainer = () => {
   const [messages, setMessages] = useState([
     {
       id: 0,
-      text: "Hi How are you!",
-      timeStamp: "12:45 AM",
-      type: "recived",
-    },
-
-    {
-      id: 2,
-      text: "Yes i am fine ",
-      timeStamp: "12:47 AM",
-      type: "send",
-    },
-    {
-      id: 3,
-      text: "Whats up",
-      timeStamp: "12:47 AM",
-      type: "send",
-    },
-    {
-      id: 4,
-      text: "Nothing",
-      timeStamp: "12:48 AM",
+      text: "HELLO! HOW YOU?",
+      timeStamp: new Date().toLocaleTimeString(),
       type: "recived",
     },
   ]);
@@ -88,7 +69,7 @@ const ChatContainer = () => {
           id: messages.length + 1,
           text: res?.data?.data,
           timestamp: new Date().toLocaleTimeString(),
-          type: "send",
+          type: "recived",
         };
         setMessages((prevState) => [...prevState, receivedMessage]);
       }
@@ -165,24 +146,31 @@ const ChatContainer = () => {
         url: `${API_URL}/chat/video_lookup`,
         method: "POST",
         data: {
-          context: selectedText,
+          context: selectedText.highlightText,
         },
       });
-      console.log(res);
+      console.log(res,"video_loolup");
       if (res?.data?.status_code == 200) {
+        // setLoading(false);  // ========== UNcommment when api call
+        // setVideoLookUp(res)
       }
     } catch (err) {
+      // setLoading(false);
+
       console.log(err);
     }
+
+    // ========== commment when api call
     setTimeout(() => {
       setLoading(false);
     }, 2000);
     setVideoLookUp({
       error: "",
       message: "success",
-      data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
+      data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
       status_code: 200,
     });
+    // ============
   };
 
   return (
