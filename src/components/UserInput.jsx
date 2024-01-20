@@ -42,7 +42,6 @@ const UserInput = ({handleSend,inputMessage,setInputMessage}) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     handleSend(e)
-
                     // Handle the Enter key press as needed
                     // For example, submit the form or perform any other action
                   }}}

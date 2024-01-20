@@ -8,6 +8,7 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "@/constant/ApiUrl";
 import UserInput from "./UserInput";
+import HighlightTooltip from "./HighlightTooltip";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -23,34 +24,38 @@ const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   color: !isOwnMessage ? "#000" : "#fff",
   //   textAlign: isOwnMessage ? "right" : "left",
   fontSize: "0.8rem",
+  cursor: "pointer",
 }));
 
 const ChatContainer = () => {
   const [inputMessage, setInputMessage] = useState("");
+  const [selectedText, setSelectedText] = useState("");
+  const [videoLookUp, setVideoLookUp] = useState("");
+  const [loading,setLoading]=useState(false)
   const [messages, setMessages] = useState([
     {
       id: 0,
       text: "Hi How are you!",
-      timestamp: "12:45 AM",
+      timeStamp: "12:45 AM",
       type: "recived",
     },
 
     {
       id: 2,
       text: "Yes i am fine ",
-      timestamp: "12:47 AM",
+      timeStamp: "12:47 AM",
       type: "send",
     },
     {
       id: 3,
       text: "Whats up",
-      timestamp: "12:47 AM",
+      timeStamp: "12:47 AM",
       type: "send",
     },
     {
       id: 4,
       text: "Nothing",
-      timestamp: "12:48 AM",
+      timeStamp: "12:48 AM",
       type: "recived",
     },
   ]);
@@ -101,7 +106,7 @@ const ChatContainer = () => {
     const newMessage = {
       id: messages.length + 1,
       text: inputMessage,
-      timestamp: new Date().toLocaleTimeString(),
+      timeStamp: new Date().toLocaleTimeString(),
       type: "send",
     };
 
@@ -132,6 +137,45 @@ const ChatContainer = () => {
     };
   }, []);
 
+  const handleSelection = (id) => {
+    const selection = window.getSelection();
+    const highlightText = selection.toString();
+    console.log("Selected Text:", highlightText);
+    setSelectedText({ id, highlightText });
+    // setTimeout(() => {
+    serachWord();
+    // }, 1000);
+  };
+
+  const serachWord = async () => {
+    setLoading(true)
+    try {
+      const res = await axios({
+        url: `${API_URL}/chat/video_lookup`,
+        method: "POST",
+        data: {
+          context: selectedText,
+        },
+      });
+      console.log(res);
+      if (res?.data?.status_code == 200) {
+        
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setTimeout(()=>{
+
+      setLoading(false)
+    },2000)
+    setVideoLookUp({
+      error: "",
+      message: "success",
+      data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
+      status_code: 200,
+    });
+  };
+
   return (
     <>
       <Container sx={{ maxHeight: "74vh", height: "74vh", overflow: "auto" }}>
@@ -145,10 +189,11 @@ const ChatContainer = () => {
         >
           <span
             style={{
-              padding: "0.5rem 0.7rem",
+              padding: "0.3rem 0.4rem",
               background: "#f2f2f2",
               borderRadius: "0.45rem",
               border: "2px solid #40bd5c",
+              fontSize: "0.8rem",
             }}
           >
             Today
@@ -163,27 +208,37 @@ const ChatContainer = () => {
                 elevation={3}
                 isOwnMessage={item?.type === "send" ? true : false}
               >
-                {item.text}
+                <HighlightTooltip selectedText={selectedText} id={item.id} loading={loading} videoLookUp={videoLookUp}>
+                  <span
+                    onMouseUp={() => handleSelection(item.id)}
+                    style={{ wordBreak: "break-all", overflowWrap: "anywhere" }}
+                  >
+                    {item.text}
+                  </span>
+                </HighlightTooltip>
                 <Box
                   component={"div"}
                   sx={{
                     margin: "0rem 0.5rem 0.1rem 1rem",
                     fontSize: "0.7rem",
-                    color: `${item?.type === "send" ? "black" : "#cdffc9"}`,
+                    color: `${item?.type === "send" ? "#cdffc9" : "black"}`,
                     position: "absolute",
                     bottom: "0px",
                     right: "0px",
                     width: "100%",
                     display: "flex",
                     justifyContent: "flex-end",
+                    userSelect: "none",
                   }}
                 >
+                  <span style={{userSelect: "none",}}>
+
+                  </span>
                   {item.timeStamp}
                   {item?.type === "send" ? (
                     <CheckIcon
                       sx={{
                         fontSize: "1rem",
-                        color: "#40bd5c",
                       }}
                     />
                   ) : (

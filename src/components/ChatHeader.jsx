@@ -28,7 +28,7 @@ const ChatHeader = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar>CU</Avatar>
+            <Avatar style={{background:"#40bd5c"}}>AA</Avatar>
             <Box
               sx={{
                 display: "flex",
@@ -43,7 +43,7 @@ const ChatHeader = () => {
                 variant="button"
                 display="block"
               >
-                Current Chat User
+                AI Assistant
               </Typography>
               {/* <Typography variant="body1" display="block">
                 curent@gmail.com
