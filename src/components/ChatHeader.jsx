@@ -39,15 +39,15 @@ const ChatHeader = () => {
               }}
             >
               <Typography
-                sx={{ lineHeight: "13px", fontSize: "1rem" }}
+                sx={{  fontSize: "1rem" }}
                 variant="button"
                 display="block"
               >
                 Current Chat User
               </Typography>
-              <Typography variant="body1" display="block">
-                curen@gmail.com
-              </Typography>
+              {/* <Typography variant="body1" display="block">
+                curent@gmail.com
+              </Typography> */}
             </Box>
           </Box>
 

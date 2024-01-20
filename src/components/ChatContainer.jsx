@@ -1,12 +1,13 @@
 "use client";
 import { Box, Container, Divider } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import Paper from "@mui/material/Paper";
 import CheckIcon from "@mui/icons-material/Check";
 import { Typography } from "@mui/material";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/FireBase/config";
+import axios from "axios";
+import { API_URL } from "@/constant/ApiUrl";
+import UserInput from "./UserInput";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -18,60 +19,122 @@ const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   marginLeft: isOwnMessage ? "auto" : 0,
   marginRight: isOwnMessage ? 0 : "auto",
   marginBottom: "10px",
-  backgroundColor: isOwnMessage ? "" : "#40bd5c",
-  color: isOwnMessage ? "#000" : "#fff",
+  backgroundColor: !isOwnMessage ? "" : "#40bd5c",
+  color: !isOwnMessage ? "#000" : "#fff",
   //   textAlign: isOwnMessage ? "right" : "left",
   fontSize: "0.8rem",
 }));
 
 const ChatContainer = () => {
-  const messages = [
+  const [inputMessage, setInputMessage] = useState("");
+  const [messages, setMessages] = useState([
     {
-      title: "Hi",
-      time: "12:45 AM",
-      from: "me",
+      id: 0,
+      text: "Hi How are you!",
+      timestamp: "12:45 AM",
+      type: "recived",
     },
-    {
-      title: "How are you",
-      time: "12:46 AM",
-      from: "me",
-    },
-    {
-      title: "Yes i am fine ",
-      time: "12:47 AM",
-      from: "user",
-    },
-    {
-      title: "Whats up",
-      time: "12:47 AM",
-      from: "user",
-    },
-    {
-      title: "Nothing",
-      time: "12:48 AM",
-      from: "me",
-    },
-  ];
 
-  const getData = async () => {
-    const docRef = doc(db, "chatUsers", "61srNImSqvWKPc8wdiec");
-    const docSnap = await getDoc(docRef);
+    {
+      id: 2,
+      text: "Yes i am fine ",
+      timestamp: "12:47 AM",
+      type: "send",
+    },
+    {
+      id: 3,
+      text: "Whats up",
+      timestamp: "12:47 AM",
+      type: "send",
+    },
+    {
+      id: 4,
+      text: "Nothing",
+      timestamp: "12:48 AM",
+      type: "recived",
+    },
+  ]);
 
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+  const callApiOnUnmount = async () => {
+    try {
+      const response = await axios({
+        url: `${API_URL}/chat/delete_conversation`,
+        method: "POST",
+      });
+      console.log("API called on unmount:", response.data);
+    } catch (error) {
+      console.error("Error calling API on unmount", error);
     }
   };
 
+  // console.log(localStorage.getItem("pageReloaded"))
+  const callApi = async (message) => {
+    try {
+      const res = await axios({
+        url: `${API_URL}/chat/conversation`,
+        method: "POST",
+        data: {
+          user_msg: message,
+        },
+      });
+      console.log(res);
+      if (res?.data?.status_code == 200) {
+        const receivedMessage = {
+          id: messages.length + 1,
+          text: res?.data?.data,
+          timestamp: new Date().toLocaleTimeString(),
+          type: "send",
+        };
+        setMessages((prevState) => [...prevState, receivedMessage]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSend = () => {
+    console.log("handle", inputMessage);
+    if (inputMessage.trim() === "") {
+      return;
+    }
+
+    const newMessage = {
+      id: messages.length + 1,
+      text: inputMessage,
+      timestamp: new Date().toLocaleTimeString(),
+      type: "send",
+    };
+
+    setMessages([...messages, newMessage]);
+    callApi(inputMessage);
+    setInputMessage("");
+  };
+
   useEffect(() => {
-    getData();
+    if (window) {
+      window.document.title = "SignLab AS";
+      window.addEventListener("beforeunload", () => {
+        localStorage.setItem("pageReloaded", "true");
+      });
+    }
+    const pageReloaded = localStorage.getItem("pageReloaded");
+    if (pageReloaded === "true") {
+      // Make your API call here
+      callApiOnUnmount();
+
+      // Reset the flag
+      localStorage.setItem("pageReloaded", "false");
+    }
+    console.log(pageReloaded, "ppp");
+
+    return () => {
+      callApiOnUnmount();
+    };
   }, []);
 
   return (
     <>
-      <Container sx={{ maxHeight: "75vh", height: "75vh", overflow: "auto" }}>
+      <Container sx={{ maxHeight: "74vh", height: "74vh", overflow: "auto" }}>
         <Box
           sx={{
             display: "flex",
@@ -96,16 +159,17 @@ const ChatContainer = () => {
           return (
             <>
               <MessageContainer
+                key={item.id}
                 elevation={3}
-                isOwnMessage={item.from === "me" ? true : false}
+                isOwnMessage={item?.type === "send" ? true : false}
               >
-                {item.title}
+                {item.text}
                 <Box
                   component={"div"}
                   sx={{
                     margin: "0rem 0.5rem 0.1rem 1rem",
                     fontSize: "0.7rem",
-                    color: `${item.from === "me" ? "black" : "#cdffc9"}`,
+                    color: `${item?.type === "send" ? "black" : "#cdffc9"}`,
                     position: "absolute",
                     bottom: "0px",
                     right: "0px",
@@ -114,8 +178,8 @@ const ChatContainer = () => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  {item.time}
-                  {item.from === "me" ? (
+                  {item.timeStamp}
+                  {item?.type === "send" ? (
                     <CheckIcon
                       sx={{
                         fontSize: "1rem",
@@ -131,6 +195,11 @@ const ChatContainer = () => {
           );
         })}
       </Container>
+      <UserInput
+        handleSend={handleSend}
+        inputMessage={inputMessage}
+        setInputMessage={setInputMessage}
+      />
     </>
   );
 };

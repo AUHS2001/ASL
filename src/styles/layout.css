@@ -25,15 +25,13 @@
   overflow-x: hidden;
   display: flex;
 }
-#page-content {
+body{
+  margin:0px
+}
+.page-content {
   min-height: 100vh;
   min-width: 100vw;
-  /* margin-left: 15.625rem; */
-  margin-left: 18.7rem;
-  -webkit-transition: margin 0.25s ease-out;
-  -moz-transition: margin 0.25s ease-out;
-  -o-transition: margin 0.25s ease-out;
-  transition: margin 0.25s ease-out;
+ 
 }
 
 .navbar-vertical {

@@ -9,9 +9,9 @@ import {
 } from "@mui/material";
 import React from "react";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
-import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
+import SendIcon from '@mui/icons-material/Send';
 
-const UserInput = () => {
+const UserInput = ({handleSend,inputMessage,setInputMessage}) => {
   return (
     <>
       <Container>
@@ -34,15 +34,24 @@ const UserInput = () => {
               </IconButton> */}
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="type your message..."
+                placeholder="Type your message..."
                 inputProps={{ "aria-label": "type your message..." }}
+                onChange={(e)=>{setInputMessage(e.target.value)}}
+                value={inputMessage}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSend(e)
+
+                    // Handle the Enter key press as needed
+                    // For example, submit the form or perform any other action
+                  }}}
+                
               />
-              <IconButton>
-                <EmojiEmotionsOutlinedIcon />
+              <IconButton onClick={(e)=>handleSend(e)}>
+                <SendIcon />
               </IconButton>
-              <IconButton>
-                <AttachFileOutlinedIcon />
-              </IconButton>
+             
             </Paper>
           </Box>
           <Box></Box>
