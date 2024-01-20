@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "@/constant/ApiUrl";
 import UserInput from "./UserInput";
-import HighlightTooltip from "./HighlightTooltip";
+import HighlightPopover from "./HighlightPopover";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -31,7 +31,7 @@ const ChatContainer = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [videoLookUp, setVideoLookUp] = useState("");
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 0,
@@ -138,17 +138,28 @@ const ChatContainer = () => {
   }, []);
 
   const handleSelection = (id) => {
+    let msg = "message" + id;
+    const container = document.getElementById(msg);
     const selection = window.getSelection();
-    const highlightText = selection.toString();
-    console.log("Selected Text:", highlightText);
-    setSelectedText({ id, highlightText });
-    // setTimeout(() => {
-    serachWord();
-    // }, 1000);
+
+    // Check if the selection is within the specified container
+    if (
+      container.contains(selection.anchorNode) &&
+      container.contains(selection.focusNode)
+    ) {
+      const highlightText = selection.toString().trim();
+
+      // Log or use the selected word as needed
+      console.log("Selected Text:", highlightText);
+      setSelectedText({ id, highlightText });
+      // setTimeout(() => {
+      serachWord();
+      // }, 1000);
+    }
   };
 
   const serachWord = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await axios({
         url: `${API_URL}/chat/video_lookup`,
@@ -159,15 +170,13 @@ const ChatContainer = () => {
       });
       console.log(res);
       if (res?.data?.status_code == 200) {
-        
       }
     } catch (err) {
       console.log(err);
     }
-    setTimeout(()=>{
-
-      setLoading(false)
-    },2000)
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
     setVideoLookUp({
       error: "",
       message: "success",
@@ -208,14 +217,20 @@ const ChatContainer = () => {
                 elevation={3}
                 isOwnMessage={item?.type === "send" ? true : false}
               >
-                <HighlightTooltip selectedText={selectedText} id={item.id} loading={loading} videoLookUp={videoLookUp}>
+                <HighlightPopover
+                  selectedText={selectedText}
+                  id={item.id}
+                  loading={loading}
+                  videoLookUp={videoLookUp}
+                >
                   <span
+                    id={"message" + item.id}
                     onMouseUp={() => handleSelection(item.id)}
                     style={{ wordBreak: "break-all", overflowWrap: "anywhere" }}
                   >
                     {item.text}
                   </span>
-                </HighlightTooltip>
+                </HighlightPopover>
                 <Box
                   component={"div"}
                   sx={{
@@ -231,9 +246,7 @@ const ChatContainer = () => {
                     userSelect: "none",
                   }}
                 >
-                  <span style={{userSelect: "none",}}>
-
-                  </span>
+                  <span style={{ userSelect: "none" }}></span>
                   {item.timeStamp}
                   {item?.type === "send" ? (
                     <CheckIcon
