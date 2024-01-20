@@ -70,7 +70,8 @@ export default function HighlightPopover({
                   >
                    
                     {videoLookUp?.data ? (
-                      <video
+                      <video 
+                      muted={false}
                         src={videoLookUp?.data}
                         style={{ width: "100%", height: "100%" }}
                         controls

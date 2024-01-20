@@ -134,7 +134,9 @@ const ChatContainer = () => {
       console.log("Selected Text:", highlightText);
       setSelectedText({ id, highlightText });
       // setTimeout(() => {
-      serachWord();
+      if (highlightText) {
+        serachWord();
+      }
       // }, 1000);
     }
   };
@@ -149,10 +151,10 @@ const ChatContainer = () => {
           context: selectedText.highlightText,
         },
       });
-      console.log(res,"video_loolup");
+      console.log(res, "video_loolup");
       if (res?.data?.status_code == 200) {
         // ========== UNcommment when api call
-        // setLoading(false);  
+        // setLoading(false);
         // setVideoLookUp(res)
       }
     } catch (err) {
