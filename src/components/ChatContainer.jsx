@@ -151,7 +151,8 @@ const ChatContainer = () => {
       });
       console.log(res,"video_loolup");
       if (res?.data?.status_code == 200) {
-        // setLoading(false);  // ========== UNcommment when api call
+        // ========== UNcommment when api call
+        // setLoading(false);  
         // setVideoLookUp(res)
       }
     } catch (err) {
@@ -167,7 +168,7 @@ const ChatContainer = () => {
     setVideoLookUp({
       error: "",
       message: "success",
-      data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
+      data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
       status_code: 200,
     });
     // ============
