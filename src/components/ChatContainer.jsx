@@ -152,20 +152,20 @@ const ChatContainer = () => {
       // setTimeout(() => {
       if (highlightText) {
         setSelectedText({ id, highlightText });
-        serachWord();
+        serachWord(highlightText);
       }
       // }, 1000);
     }
   };
 
-  const serachWord = async () => {
+  const serachWord = async (highlightText) => {
     setLoading(true);
     try {
       const res = await axios({
         url: `${API_URL}/chat/video_lookup`,
         method: "POST",
         data: {
-          context: selectedText.highlightText,
+          context: highlightText,
         },
       });
       console.log(res, "video_loolup");
