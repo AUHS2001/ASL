@@ -10,6 +10,7 @@ import { API_URL } from "@/constant/ApiUrl";
 import UserInput from "./UserInput";
 import HighlightPopover from "./HighlightPopover";
 import TypingIndicator from "./TypingIndicator";
+import { toast } from "react-toastify";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -75,23 +76,18 @@ const ChatContainer = () => {
         };
         setTypingIndiacator(false);
         setMessages((prevState) => [...prevState, receivedMessage]);
+      } else {
+        toast.error("Something Went Worng!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          theme: "light",
+        });
       }
     } catch (err) {
       console.log(err);
     }
-
-    // setTimeout(() => {
-    //   console.log(preMsg, "-----mmm");
-    //   let newId = preMsg.length + 1;
-    //   const receivedMessage = {
-    //     id: newId,
-    //     text: "News Message " + newId,
-    //     timeStamp: new Date().toLocaleTimeString(),
-    //     type: "recived",
-    //   };
-    //   setTypingIndiacator(false);
-    //   setMessages((prevState) => [...prevState, receivedMessage]);
-    // }, 2000);
   };
 
   const handleSend = async () => {
@@ -149,12 +145,11 @@ const ChatContainer = () => {
 
       // Log or use the selected word as needed
       console.log("Selected Text:", highlightText);
-      // setTimeout(() => {
+
       if (highlightText) {
         setSelectedText({ id, highlightText });
         serachWord(highlightText);
       }
-      // }, 1000);
     }
   };
 
@@ -170,27 +165,23 @@ const ChatContainer = () => {
       });
       console.log(res, "video_loolup");
       if (res?.data?.status_code == 200) {
-        // ========== UNcommment when api call
         setLoading(false);
-        setVideoLookUp(res.data)
+        setVideoLookUp(res.data);
+      } else {
+        toast.warn("Select again this word", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          theme: "light",
+        });
+        setLoading(false);
       }
     } catch (err) {
       setLoading(false);
 
       console.log(err);
     }
-
-    // ========== commment when api call
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 2000);
-    // setVideoLookUp({
-    //   error: "",
-    //   message: "success",
-    //   data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
-    //   status_code: 200,
-    // });
-    // ============
   };
 
   return (
