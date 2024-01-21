@@ -19,6 +19,7 @@ const ChatHeader = () => {
           maxHeight: "12vh",
           minHeight: "12vh",
         }}
+        maxWidth="xl"
       >
         <Stack
           sx={{

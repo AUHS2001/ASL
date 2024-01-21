@@ -9,6 +9,7 @@ import axios from "axios";
 import { API_URL } from "@/constant/ApiUrl";
 import UserInput from "./UserInput";
 import HighlightPopover from "./HighlightPopover";
+import TypingIndicator from "./TypingIndicator";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -32,6 +33,7 @@ const ChatContainer = () => {
   const [selectedText, setSelectedText] = useState("");
   const [videoLookUp, setVideoLookUp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [typingIndiacator, setTypingIndiacator] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 0,
@@ -54,7 +56,7 @@ const ChatContainer = () => {
   };
 
   // console.log(localStorage.getItem("pageReloaded"))
-  const callApi = async (message) => {
+  const callApi = async (message, preMsg) => {
     try {
       const res = await axios({
         url: `${API_URL}/chat/conversation`,
@@ -66,33 +68,48 @@ const ChatContainer = () => {
       console.log(res);
       if (res?.data?.status_code == 200) {
         const receivedMessage = {
-          id: messages.length + 1,
+          id: preMsg.length + 1,
           text: res?.data?.data,
-          timestamp: new Date().toLocaleTimeString(),
+          timeStamp: new Date().toLocaleTimeString(),
           type: "recived",
         };
+        setTypingIndiacator(false);
         setMessages((prevState) => [...prevState, receivedMessage]);
       }
     } catch (err) {
       console.log(err);
     }
+
+    // setTimeout(() => {
+    //   console.log(preMsg, "-----mmm");
+    //   let newId = preMsg.length + 1;
+    //   const receivedMessage = {
+    //     id: newId,
+    //     text: "News Message " + newId,
+    //     timeStamp: new Date().toLocaleTimeString(),
+    //     type: "recived",
+    //   };
+    //   setTypingIndiacator(false);
+    //   setMessages((prevState) => [...prevState, receivedMessage]);
+    // }, 2000);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     console.log("handle", inputMessage);
     if (inputMessage.trim() === "") {
       return;
     }
-
+    let newId = messages.length + 1;
     const newMessage = {
-      id: messages.length + 1,
+      id: newId,
       text: inputMessage,
       timeStamp: new Date().toLocaleTimeString(),
       type: "send",
     };
-
-    setMessages([...messages, newMessage]);
-    callApi(inputMessage);
+    let preMsg = [...messages, newMessage];
+    await setMessages(preMsg);
+    setTypingIndiacator(true);
+    callApi(inputMessage, preMsg);
     setInputMessage("");
   };
 
@@ -122,7 +139,7 @@ const ChatContainer = () => {
     let msg = "message" + id;
     const container = document.getElementById(msg);
     const selection = window.getSelection();
-
+    // alert(selection.toString().trim())
     // Check if the selection is within the specified container
     if (
       container.contains(selection.anchorNode) &&
@@ -132,9 +149,9 @@ const ChatContainer = () => {
 
       // Log or use the selected word as needed
       console.log("Selected Text:", highlightText);
-      setSelectedText({ id, highlightText });
       // setTimeout(() => {
       if (highlightText) {
+        setSelectedText({ id, highlightText });
         serachWord();
       }
       // }, 1000);
@@ -154,31 +171,37 @@ const ChatContainer = () => {
       console.log(res, "video_loolup");
       if (res?.data?.status_code == 200) {
         // ========== UNcommment when api call
-        // setLoading(false);
-        // setVideoLookUp(res)
+        setLoading(false);
+        setVideoLookUp(res.data)
       }
     } catch (err) {
-      // setLoading(false);
+      setLoading(false);
 
       console.log(err);
     }
 
     // ========== commment when api call
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    setVideoLookUp({
-      error: "",
-      message: "success",
-      data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
-      status_code: 200,
-    });
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, 2000);
+    // setVideoLookUp({
+    //   error: "",
+    //   message: "success",
+    //   data: "https://main-bucket-signlab-us.s3.us-east-2.amazonaws.com/signs/medium-size/mp4-videos/A-Z_From_Down_T4[2m26s].mp4",
+    //   status_code: 200,
+    // });
     // ============
   };
 
   return (
     <>
-      <Container sx={{ maxHeight: "74vh", height: "74vh", overflow: "auto" }}>
+      <Container
+        sx={{
+          maxHeight: "74vh",
+          height: { xs: "calc(100dvh - 12dvh)", md: "74vh", lg: "74vh" },
+          overflow: "auto",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -217,6 +240,7 @@ const ChatContainer = () => {
                   <span
                     id={"message" + item.id}
                     onMouseUp={() => handleSelection(item.id)}
+                    onTouchEnd={() => handleSelection(item.id)}
                     style={{ wordBreak: "break-all", overflowWrap: "anywhere" }}
                   >
                     {item.text}
@@ -253,6 +277,7 @@ const ChatContainer = () => {
             </>
           );
         })}
+        {typingIndiacator ? <TypingIndicator /> : ""}
       </Container>
       <UserInput
         handleSend={handleSend}

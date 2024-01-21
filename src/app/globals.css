@@ -1,0 +1,27 @@
+/* Chat.css */
+.chatContainer {
+    padding: 16px; /* Adjust as needed */
+  }
+  
+  .typingIndicator {
+    font-style: italic;
+    color: #888; /* Adjust the color as needed */
+    animation: typingAnimation 1s infinite;
+  }
+  
+  @keyframes typingAnimation {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+  
+  .avatar {
+    margin-right: 8px; /* Adjust as needed */
+  }
+  

@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
@@ -15,7 +16,7 @@ export default function HighlightPopover({
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
-    if (selectedText) {
+    if (selectedText.highlightText) {
       setAnchorEl(event.currentTarget);
     }
   };
