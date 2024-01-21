@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/apiUrl/:path*",
+            "destination": "http://ai-sign-env.eba-z9pwwi3e.us-east-1.elasticbeanstalk.com/:path*"
+        }
+    ]
+}

@@ -1,19 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    async headers() {
-      return [
-        {
-          source: '/(.*)',
-          headers: [
-            {
-              key: 'Content-Security-Policy',
-              value: "connect-src 'self' http://ai-sign-env.eba-z9pwwi3e.us-east-1.elasticbeanstalk.com;",
-            },
-          ],
-        },
-      ];
-    },
-  };
-
-export default nextConfig;
+  reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: "/apiUrl/:path*",
+        destination:
+          "http://ai-sign-env.eba-z9pwwi3e.us-east-1.elasticbeanstalk.com/:path*", // Add :path* to capture the entire path
+      },
+    ];
+  },
   
+};
+export default nextConfig;
