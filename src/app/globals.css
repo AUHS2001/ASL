@@ -8,7 +8,13 @@
     color: #888; /* Adjust the color as needed */
     animation: typingAnimation 1s infinite;
   }
-  
+  .highlight {
+    background-color: rgb(255, 145, 0);
+    color:white;
+    padding: 2px 3px;
+    margin:0px 3px;
+    border-radius: 5px;
+  }
   @keyframes typingAnimation {
     0% {
       opacity: 0.5;

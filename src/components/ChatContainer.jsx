@@ -11,19 +11,20 @@ import UserInput from "./UserInput";
 import HighlightPopover from "./HighlightPopover";
 import TypingIndicator from "./TypingIndicator";
 import { toast } from "react-toastify";
+import HiglightedText from "./HiglightedText";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
   maxWidth: "50%",
   minWidth: "85px",
   width: "fit-content",
-  padding: "0.5rem 1rem 1.3rem 1rem",
+  padding: "1rem 1rem 1.5rem 1rem",
   borderRadius: isOwnMessage ? "10px 10px 0 10px" : "10px 10px 10px 0",
   marginLeft: isOwnMessage ? "auto" : 0,
   marginRight: isOwnMessage ? 0 : "auto",
   marginBottom: "10px",
-  backgroundColor: !isOwnMessage ? "" : "#40bd5c",
-  color: !isOwnMessage ? "#000" : "#fff",
+  backgroundColor: isOwnMessage ? "" : "#40bd5c",
+  color: isOwnMessage ? "#000" : "#fff",
   //   textAlign: isOwnMessage ? "right" : "left",
   fontSize: "0.8rem",
   cursor: "pointer",
@@ -71,6 +72,7 @@ const ChatContainer = () => {
         const receivedMessage = {
           id: preMsg.length + 1,
           text: res?.data?.data,
+          translation:res?.data?.data,
           timeStamp: new Date().toLocaleTimeString(),
           type: "recived",
         };
@@ -232,37 +234,48 @@ const ChatContainer = () => {
                     id={"message" + item.id}
                     onMouseUp={() => handleSelection(item.id)}
                     onTouchEnd={() => handleSelection(item.id)}
-                    style={{ wordBreak: "break-all", overflowWrap: "anywhere" }}
+                    style={{ wordBreak: "break-all", overflowWrap: "anywhere",}}
                   >
-                    {item.text}
+                            <HiglightedText content={item.text}/>
+
+                    {/* {item.text} */}
                   </span>
                 </HighlightPopover>
+                {item?.type === "recived"?
                 <Box
                   component={"div"}
                   sx={{
-                    margin: "0rem 0.5rem 0.1rem 1rem",
+                    margin:'5px 0px',
                     fontSize: "0.7rem",
-                    color: `${item?.type === "send" ? "#cdffc9" : "black"}`,
+                    width: "100%",
+                    display: "flex",
+                    textTransform:"capitalize",
+                    flexDirection:'column'
+                   
+                  }}
+                >
+                  <Typography variant="body2" sx={{fontWeight:'550',fontSize:"0.7rem"}}>Translation:</Typography>
+                  <Typography variant="body2" sx={{fontSize:"0.7rem"}}>{item.translation}</Typography>
+                  
+                </Box>:""}
+
+                <Box
+                  component={"div"}
+                  sx={{
+                    fontSize: "0.7rem",
+                    color: `${item?.type === "recived" ? "#cdffc9" : "black"}`,
                     position: "absolute",
-                    bottom: "0px",
-                    right: "0px",
+                    bottom: "3px",
+                    right: "8px",
                     width: "100%",
                     display: "flex",
                     justifyContent: "flex-end",
                     userSelect: "none",
                   }}
                 >
-                  <span style={{ userSelect: "none" }}></span>
+                  
                   {item.timeStamp}
-                  {item?.type === "send" ? (
-                    <CheckIcon
-                      sx={{
-                        fontSize: "1rem",
-                      }}
-                    />
-                  ) : (
-                    ""
-                  )}
+                 
                 </Box>
               </MessageContainer>
             </>
