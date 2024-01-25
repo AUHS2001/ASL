@@ -22,11 +22,9 @@ const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   borderRadius: isOwnMessage ? "10px 10px 0 10px" : "10px 10px 10px 0",
   marginLeft: isOwnMessage ? "auto" : 0,
   marginRight: isOwnMessage ? 0 : "auto",
-  marginBottom: "10px",
+  marginBottom: "7px",
   backgroundColor: isOwnMessage ? "" : "#40bd5c",
   color: isOwnMessage ? "#000" : "#fff",
-  //   textAlign: isOwnMessage ? "right" : "left",
-  fontSize: "0.8rem",
   cursor: "pointer",
 }));
 
@@ -72,7 +70,7 @@ const ChatContainer = () => {
         const receivedMessage = {
           id: preMsg.length + 1,
           text: res?.data?.data,
-          translation:res?.data?.data,
+          translation: res?.data?.data,
           timeStamp: new Date().toLocaleTimeString(),
           type: "recived",
         };
@@ -234,30 +232,37 @@ const ChatContainer = () => {
                     id={"message" + item.id}
                     onMouseUp={() => handleSelection(item.id)}
                     onTouchEnd={() => handleSelection(item.id)}
-                    style={{ wordBreak: "break-all", overflowWrap: "anywhere",}}
+                    style={{ wordBreak: "break-all", overflowWrap: "anywhere",fontSize:'0.9rem' }}
                   >
-                            <HiglightedText content={item.text}/>
+                    <HiglightedText content={item.text} />
 
-                    {/* {item.text} */}
                   </span>
                 </HighlightPopover>
-                {item?.type === "recived"?
-                <Box
-                  component={"div"}
-                  sx={{
-                    margin:'5px 0px',
-                    fontSize: "0.7rem",
-                    width: "100%",
-                    display: "flex",
-                    textTransform:"capitalize",
-                    flexDirection:'column'
-                   
-                  }}
-                >
-                  <Typography variant="body2" sx={{fontWeight:'550',fontSize:"0.7rem"}}>Translation:</Typography>
-                  <Typography variant="body2" sx={{fontSize:"0.7rem"}}>{item.translation}</Typography>
-                  
-                </Box>:""}
+                {item?.type === "recived" ? (
+                  <Box
+                    component={"div"}
+                    sx={{
+                      margin: "5px 0px",
+                      fontSize: "0.7rem",
+                      width: "100%",
+                      display: "flex",
+                      textTransform: "capitalize",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: "600",letterSpacing:1}}
+                    >
+                      Translation:
+                    </Typography>
+                    <Typography   variant="caption" display="block" gutterBottom>
+                      {item.translation}
+                    </Typography>
+                  </Box>
+                ) : (
+                  ""
+                )}
 
                 <Box
                   component={"div"}
@@ -273,9 +278,7 @@ const ChatContainer = () => {
                     userSelect: "none",
                   }}
                 >
-                  
                   {item.timeStamp}
-                 
                 </Box>
               </MessageContainer>
             </>
