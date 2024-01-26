@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, Divider } from "@mui/material";
+import { Box, Container, Divider, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import Paper from "@mui/material/Paper";
@@ -12,6 +12,9 @@ import HighlightPopover from "./HighlightPopover";
 import TypingIndicator from "./TypingIndicator";
 import { toast } from "react-toastify";
 import HiglightedText from "./HiglightedText";
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -38,6 +41,7 @@ const ChatContainer = () => {
     {
       id: 0,
       text: "HELLO! HOW YOU?",
+      translation: "HELLO! HOW ARE YOU?",
       timeStamp: new Date().toLocaleTimeString(),
       type: "recived",
     },
@@ -189,7 +193,7 @@ const ChatContainer = () => {
       <Container
         sx={{
           maxHeight: "74vh",
-          height: { xs: "calc(100dvh - 12dvh)", md: "74vh", lg: "74vh" },
+          height: { xs: "70vh", md: "74vh", lg: "74vh" },
           overflow: "auto",
         }}
       >
@@ -232,12 +236,13 @@ const ChatContainer = () => {
                     id={"message" + item.id}
                     onMouseUp={() => handleSelection(item.id)}
                     onTouchEnd={() => handleSelection(item.id)}
-                    style={{ wordBreak: "break-all", overflowWrap: "anywhere",fontSize:'0.9rem' }}
+                    style={{ wordBreak: "break-all", overflowWrap: "anywhere", fontSize: '0.9rem' }}
                   >
                     <HiglightedText content={item.text} />
 
                   </span>
                 </HighlightPopover>
+                {item?.type === "recived" ? <Box sx={{ display: 'flex', justifyContent: 'end' }}><IconButton size="small"><ContentCopyIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbUpOffAltIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbDownOffAltIcon fontSize="small" /></IconButton></Box> : ""}
                 {item?.type === "recived" ? (
                   <Box
                     component={"div"}
@@ -252,13 +257,14 @@ const ChatContainer = () => {
                   >
                     <Typography
                       variant="subtitle2"
-                      sx={{ fontWeight: "600",letterSpacing:1}}
+                      sx={{ fontWeight: "600", letterSpacing: 1 }}
                     >
                       Translation:
                     </Typography>
-                    <Typography   variant="caption" display="block" gutterBottom>
+                    <Typography variant="caption" display="block" gutterBottom>
                       {item.translation}
                     </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'end' }}><IconButton size="small"><ContentCopyIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbUpOffAltIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbDownOffAltIcon fontSize="small" /></IconButton></Box>
                   </Box>
                 ) : (
                   ""
