@@ -12,9 +12,9 @@ import HighlightPopover from "./HighlightPopover";
 import TypingIndicator from "./TypingIndicator";
 import { toast } from "react-toastify";
 import HiglightedText from "./HiglightedText";
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -26,8 +26,8 @@ const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   marginLeft: isOwnMessage ? "auto" : 0,
   marginRight: isOwnMessage ? 0 : "auto",
   marginBottom: "7px",
-  backgroundColor: isOwnMessage ? "" : "#40bd5c",
-  color: isOwnMessage ? "#000" : "#fff",
+  backgroundColor: isOwnMessage ? "" : "#d9fdd3",
+  color: isOwnMessage ? "#000" : "black",
   cursor: "pointer",
 }));
 
@@ -192,17 +192,20 @@ const ChatContainer = () => {
     <>
       <Container
         sx={{
-          maxHeight: "74vh",
-          height: { xs: "70vh", md: "74vh", lg: "74vh" },
+          maxHeight: "80vh",
+          height: { xs: "70vh", md: "74vh", lg: "79vh" },
           overflow: "auto",
         }}
+        maxWidth={"xl"}
       >
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             width: "100%",
-            marginTop: "1rem",
+            margin: "0.5rem 0rem",
+            position: "sticky",
+            top: "10px",
           }}
         >
           <span
@@ -236,18 +239,41 @@ const ChatContainer = () => {
                     id={"message" + item.id}
                     onMouseUp={() => handleSelection(item.id)}
                     onTouchEnd={() => handleSelection(item.id)}
-                    style={{ wordBreak: "break-all", overflowWrap: "anywhere", fontSize: '0.9rem' }}
+                    style={{
+                      wordBreak: "break-all",
+                      overflowWrap: "anywhere",
+                      fontSize: "0.9rem",
+                    }}
                   >
                     <HiglightedText content={item.text} />
-
                   </span>
                 </HighlightPopover>
-                {item?.type === "recived" ? <Box sx={{ display: 'flex', justifyContent: 'end' }}><IconButton size="small"><ContentCopyIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbUpOffAltIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbDownOffAltIcon fontSize="small" /></IconButton></Box> : ""}
+                {item?.type === "recived" ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "end",
+                      margin: "7px 0px",
+                    }}
+                  >
+                    <IconButton size="small">
+                      <ContentCopyIcon sx={{ fontSize: "1rem" }} />{" "}
+                    </IconButton>
+                    <IconButton size="small">
+                      <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
+                    </IconButton>
+                    <IconButton size="small">
+                      <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
+                    </IconButton>
+                  </Box>
+                ) : (
+                  ""
+                )}
                 {item?.type === "recived" ? (
                   <Box
                     component={"div"}
                     sx={{
-                      margin: "5px 0px",
+                      margin: "7px 0px",
                       fontSize: "0.7rem",
                       width: "100%",
                       display: "flex",
@@ -264,7 +290,17 @@ const ChatContainer = () => {
                     <Typography variant="caption" display="block" gutterBottom>
                       {item.translation}
                     </Typography>
-                    <Box sx={{ display: 'flex', justifyContent: 'end' }}><IconButton size="small"><ContentCopyIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbUpOffAltIcon fontSize="small" /></IconButton><IconButton size="small"><ThumbDownOffAltIcon fontSize="small" /></IconButton></Box>
+                    <Box sx={{ display: "flex", justifyContent: "end" }}>
+                      <IconButton size="small">
+                        <ContentCopyIcon sx={{ fontSize: "1rem" }} />
+                      </IconButton>
+                      <IconButton size="small">
+                        <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
+                      </IconButton>
+                      <IconButton size="small">
+                        <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
+                      </IconButton>
+                    </Box>
                   </Box>
                 ) : (
                   ""

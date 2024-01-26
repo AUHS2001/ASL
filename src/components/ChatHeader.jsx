@@ -1,22 +1,22 @@
-"use client"
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import InsightsIcon from '@mui/icons-material/Insights';
+"use client";
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import InsightsIcon from "@mui/icons-material/Insights";
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [];
+const settings = ["Profile", "Logout"];
 
 function ChatHeader() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -38,10 +38,20 @@ function ChatHeader() {
   };
 
   return (
-    <AppBar position="static" sx={{backgroundColor:'white',boxShadow:'none',color:'black'}}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "#f0f2f5",
+        boxShadow: "none",
+        color: "black",
+        borderBottom: "1px solid #bdbdbd",
+      }}
+    >
       <Container maxWidth="xl">
-        <Toolbar disableGutters >
-          <InsightsIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+        <Toolbar disableGutters>
+          <InsightsIcon
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1, fill: "#40bd5c" }}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -49,18 +59,18 @@ function ChatHeader() {
             href="#"
             sx={{
               mr: 4,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: "none", md: "flex" },
               // fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.1rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              fontWeight: 600,
+              letterSpacing: "0.05rem",
+              color: "#40bd5c",
+              textDecoration: "none",
             }}
           >
             AI SignLab
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -95,8 +105,8 @@ function ChatHeader() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          </Box> */}
+          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -104,23 +114,23 @@ function ChatHeader() {
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              fontFamily: "monospace",
+              fontWeight: 600,
+              letterSpacing: ".03rem",
+              color: "#40bd5c",
+              textDecoration: "none",
             }}
           >
-             AI SignLab
+            AI SignLab
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
@@ -128,23 +138,45 @@ function ChatHeader() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
+            <Box
+              sx={{
+                display: "flex",
+                // flexDirection: "column",
+                alignItems: "start",
+              }}
+            >
+              <Tooltip title="Open settings" >
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Box
+                sx={{
+                  ml:1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                }}
+              >
+                <Typography variant="subtitle2" sx={{margin:0}}> Current User</Typography>
+                <Typography variant="caption"  sx={{margin:0}}>
+                  {" "}
+                  Currentuser@gmail.com
+                </Typography>
+              </Box>
+            </Box>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
