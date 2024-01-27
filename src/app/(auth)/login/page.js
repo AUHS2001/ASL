@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_URL } from "@/constant/ApiUrl";
-import LoginSide from "@/components/server-side/loginSide";
+import LoginSide from "@/components/serverSide/loginSide";
 
 export default function Home() {
   const router = useRouter();
