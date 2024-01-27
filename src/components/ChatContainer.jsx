@@ -25,9 +25,9 @@ import { checkCase, copyContent } from "@/utils/helper";
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
   maxWidth: "50%",
-  minWidth: isOwnMessage ? "85px" : "100px",
+  minWidth: isOwnMessage ? "85px" : "150px",
   width: "fit-content",
-  padding: "1rem 1rem 1.5rem 1rem",
+  padding: "1rem 0.5rem 1.5rem 1rem",
   borderRadius: isOwnMessage ? "10px 10px 0 10px" : "10px 10px 10px 0",
   marginLeft: isOwnMessage ? "auto" : 0,
   marginRight: isOwnMessage ? 0 : "auto",
@@ -367,7 +367,7 @@ const ChatContainer = () => {
                     <Box
                       component={"div"}
                       sx={{
-                        margin: "0px 0px",
+                        marginTop: "5px",
                         fontSize: "0.7rem",
                         width: "100%",
                         display: "flex",

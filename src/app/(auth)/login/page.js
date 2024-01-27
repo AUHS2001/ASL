@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_URL } from "@/constant/ApiUrl";
+import LoginSide from "@/components/server-side/loginSide";
 
 export default function Home() {
   const router = useRouter();
@@ -62,24 +63,7 @@ export default function Home() {
         <>
           <Grid container component="main" sx={{ height: "100vh" }}>
             <CssBaseline />
-            <Grid
-              className="bg-tech"
-              item
-              xs={false}
-              sm={4}
-              md={6}
-              sx={{
-                backgroundImage: `url('./images/Ai-image-logo.jpeg')`,
-                backgroundRepeat: "no-repeat",
-                backgroundColor: (t) =>
-                  t.palette.mode === "light"
-                    ? t.palette.grey[50]
-                    : t.palette.grey[900],
-                backgroundSize: "cover",
-                objectFit: "cover",
-                backgroundPosition: "center",
-              }}
-            />
+            <LoginSide />
             <Grid
               item
               xs={12}
