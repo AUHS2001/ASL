@@ -1,4 +1,9 @@
 /* Chat.css */
+
+body{
+  margin:0;
+  padding: 0;
+}
 .chatContainer {
   padding: 16px; /* Adjust as needed */
 }
@@ -15,7 +20,7 @@
   text-decoration-color: #ff7300;
   text-decoration-thickness:2px;
   /* color: white; */
-  padding: 2px 3px;
+  padding: 2px 0px;
   margin: 0px 3px;
   border-radius: 5px;
 }

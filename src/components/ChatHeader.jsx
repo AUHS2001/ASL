@@ -14,14 +14,21 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import InsightsIcon from "@mui/icons-material/Insights";
+import { useRouter } from "next/navigation";
 
-const pages = [];
-const settings = ["Profile", "Logout"];
+
 
 function ChatHeader() {
+
+  const pages = [];
+  const settings = ["Profile", "Logout"];
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setUser] = React.useState(JSON.parse(localStorage.getItem("user")));
 
+  const router=useRouter()
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -33,9 +40,19 @@ function ChatHeader() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (type) => {
+    console.log(type,"tt")
+    if(type==="Logout"){
+      handleLogout()
+    }
     setAnchorElUser(null);
   };
+
+  const handleLogout=()=>{
+    localStorage.removeItem("user")
+    router.push("/login")
+  }
+
 
   return (
     <AppBar
@@ -56,7 +73,7 @@ function ChatHeader() {
             variant="h6"
             noWrap
             component="a"
-            href="#"
+           
             sx={{
               mr: 4,
               display: { xs: "none", md: "flex" },
@@ -138,33 +155,44 @@ function ChatHeader() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Box
-              sx={{
-                display: "flex",
-                // flexDirection: "column",
-                alignItems: "start",
-              }}
-            >
-              <Tooltip title="Open settings" >
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
+            <button onClick={handleOpenUserMenu} style={{ p: 0,background:'none',border:'none',outline:"none" }}>
               <Box
                 sx={{
-                  ml:1,
                   display: "flex",
-                  flexDirection: "column",
-                  alignItems: "start",
+                  // flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Typography variant="subtitle2" sx={{margin:0}}> Current User</Typography>
-                <Typography variant="caption"  sx={{margin:0}}>
-                  {" "}
-                  Currentuser@gmail.com
-                </Typography>
+                <Tooltip title="Open settings">
+                  <Avatar alt={user?.email.slice(0,1)} src="/static/images/avatar/2.jpg" />
+                </Tooltip>
+                <Box
+                  sx={{
+                    ml: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ lineHeight: 1, mb: 0.3, fontWeight: 500 }}
+                  >
+                    {" "}
+                    {user?.email.slice(0,6)}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ lineHeight: 1, fontWeight: 300, color: "#8b8b8b" }}
+                  >
+                    {" "}
+                    {user?.email}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+            </button>
+
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -182,7 +210,7 @@ function ChatHeader() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={()=>handleCloseUserMenu(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

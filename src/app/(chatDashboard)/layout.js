@@ -1,27 +1,25 @@
 "use client";
-// import node module libraries
 import { useState, useEffect, useContext } from "react";
-
-// import theme style scss file
-import "@/styles/layout.css";
 import { useRouter } from "next/navigation";
-
-// import sub components
-// import NavbarVertical from '/layouts/navbars/NavbarVertical';
-// import NavbarTop from '/layouts/navbars/NavbarTop';
-// import SideBar from "@/layouts/SideBar";
 import { AuthContext } from "@/Context/AuthContext";
 
 export default function DashboardLayout({ children }) {
-  const [showMenu, setShowMenu] = useState(true);
+  const [isloading, setIsloading] = useState(true);
   const router = useRouter();
 
-  const ToggleMenu = () => {
-    return setShowMenu(!showMenu);
-  };
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user,"user")
+    if (user) {
+      setIsloading(false);
+    } else {
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <>
-      <div className="page-content">{children}</div>
+      <div className="page-content">{!isloading ? children : ""}</div>
     </>
   );
 }

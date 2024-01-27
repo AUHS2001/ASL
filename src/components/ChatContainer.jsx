@@ -15,11 +15,17 @@ import HiglightedText from "./HiglightedText";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { formatStringToTime } from "@/utils/formatTime";
+import {
+  submitMsgFeedback,
+  submitTranslationFeedback,
+} from "@/utils/apiCalling";
+import { checkCase, copyContent } from "@/utils/helper";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
   maxWidth: "50%",
-  minWidth: "85px",
+  minWidth: isOwnMessage ? "85px" : "100px",
   width: "fit-content",
   padding: "1rem 1rem 1.5rem 1rem",
   borderRadius: isOwnMessage ? "10px 10px 0 10px" : "10px 10px 10px 0",
@@ -37,15 +43,53 @@ const ChatContainer = () => {
   const [videoLookUp, setVideoLookUp] = useState("");
   const [loading, setLoading] = useState(false);
   const [typingIndiacator, setTypingIndiacator] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      id: 0,
-      text: "HELLO! HOW YOU?",
-      translation: "HELLO! HOW ARE YOU?",
-      timeStamp: new Date().toLocaleTimeString(),
-      type: "recived",
-    },
-  ]);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [messages, setMessages] = useState([]);
+
+  // ===============First Time Render ================
+
+  useEffect(() => {
+    if (window) {
+      window.document.title = "SignLab AS";
+    }
+    console.log(user, "user");
+    getAllChat();
+  }, []);
+
+  // =========================
+
+  // ========= Get All Old Chat ==========
+  const getAllChat = async () => {
+    try {
+      const response = await axios({
+        url: `${API_URL}/chat/get_conversation`,
+        method: "POST",
+        data: {
+          user_id: user?.id,
+        },
+      });
+      console.log("getAllChat", response.data);
+      if (
+        response?.data?.status_code === 200 &&
+        response?.data?.data.length > 0
+      ) {
+        setMessages(response.data.data);
+      } else {
+        setMessages([
+          {
+            _id: 0,
+            message: `HELLO! HOW 'YOU'?`,
+            translation: "HELLO! HOW ARE YOU?",
+            timestamp: new Date(),
+            role: "assistant",
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error getAllChat", error);
+    }
+  };
+  // =============================
 
   const callApiOnUnmount = async () => {
     try {
@@ -59,81 +103,92 @@ const ChatContainer = () => {
     }
   };
 
-  // console.log(localStorage.getItem("pageReloaded"))
-  const callApi = async (message, preMsg) => {
+  // ============= User Message Handler ===================
+  const handleSend = async () => {
+    console.log("handle", inputMessage);
+    if (inputMessage.trim() === "") {
+      return;
+    }
+
+    let newId = messages.length + 1;
+    const newMessage = {
+      _id: newId,
+      message: inputMessage,
+      timestamp: new Date(),
+      role: "user",
+    };
+    let preMsg = [...messages, newMessage];
+    await setMessages(preMsg);
+    setTypingIndiacator(true);
+    if (checkCase(inputMessage) === "Uppercase") {
+      sendMessage(inputMessage, preMsg);
+    } else {
+      messageConversion(inputMessage, preMsg);
+    }
+    setInputMessage("");
+  };
+
+  // =========================
+
+  // ============= Send User Message ===================
+  const sendMessage = async (message, preMsg) => {
     try {
       const res = await axios({
         url: `${API_URL}/chat/conversation`,
         method: "POST",
         data: {
           user_msg: message,
+          user_id: user?.id,
         },
       });
       console.log(res);
       if (res?.data?.status_code == 200) {
-        const receivedMessage = {
-          id: preMsg.length + 1,
-          text: res?.data?.data,
-          translation: res?.data?.data,
-          timeStamp: new Date().toLocaleTimeString(),
-          type: "recived",
-        };
+        const receivedMessage = res?.data?.data;
         setTypingIndiacator(false);
-        setMessages((prevState) => [...prevState, receivedMessage]);
+        // setMessages((prevState) => [...prevState, receivedMessage]);
+        let updatedMsg = [...preMsg, receivedMessage];
+        setMessages(updatedMsg);
       } else {
-        toast.error("Something Went Worng!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          theme: "light",
-        });
+        toast.error("Something Went Worng!");
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleSend = async () => {
-    console.log("handle", inputMessage);
-    if (inputMessage.trim() === "") {
-      return;
-    }
-    let newId = messages.length + 1;
-    const newMessage = {
-      id: newId,
-      text: inputMessage,
-      timeStamp: new Date().toLocaleTimeString(),
-      type: "send",
-    };
-    let preMsg = [...messages, newMessage];
-    await setMessages(preMsg);
-    setTypingIndiacator(true);
-    callApi(inputMessage, preMsg);
-    setInputMessage("");
-  };
+  // =====================================================
 
-  useEffect(() => {
-    if (window) {
-      window.document.title = "SignLab AS";
-      window.addEventListener("beforeunload", () => {
-        localStorage.setItem("pageReloaded", "true");
+  const messageConversion = async (message, preMsg) => {
+    try {
+      const res = await axios({
+        url: `${API_URL}/chat/asl_conversion`,
+        method: "POST",
+        data: {
+          user_msg: message,
+          user_id: user?.id,
+        },
       });
+      console.log(res);
+      if (res?.data?.status_code == 200) {
+        let newId = messages.length + 1;
+        const newMessage = {
+          _id: newId,
+          message: res?.data?.data,
+          timestamp: new Date(),
+          role: "user",
+        };
+        let updatedMsg = [...preMsg, newMessage];
+        setMessages(updatedMsg);
+        console.log(updatedMsg, "nnn");
+        sendMessage(res?.data?.data, updatedMsg);
+      } else {
+        toast.error("Something Went Worng!");
+      }
+    } catch (err) {
+      console.log(err);
     }
-    const pageReloaded = localStorage.getItem("pageReloaded");
-    if (pageReloaded === "true") {
-      // Make your API call here
-      callApiOnUnmount();
-
-      // Reset the flag
-      localStorage.setItem("pageReloaded", "false");
-    }
-    console.log(pageReloaded, "ppp");
-
-    return () => {
-      callApiOnUnmount();
-    };
-  }, []);
+  };
+  // ======================================================
 
   const handleSelection = (id) => {
     let msg = "message" + id;
@@ -193,7 +248,7 @@ const ChatContainer = () => {
       <Container
         sx={{
           maxHeight: "80vh",
-          height: { xs: "70vh", md: "74vh", lg: "79vh" },
+          height: { xs: "75vh", md: "74vh", lg: "79vh" },
           overflow: "auto",
         }}
         maxWidth={"xl"}
@@ -206,6 +261,7 @@ const ChatContainer = () => {
             margin: "0.5rem 0rem",
             position: "sticky",
             top: "10px",
+            zIndex: "1000",
           }}
         >
           <span
@@ -227,90 +283,160 @@ const ChatContainer = () => {
               <MessageContainer
                 key={item.id}
                 elevation={3}
-                isOwnMessage={item?.type === "send" ? true : false}
+                isOwnMessage={item?.role === "user" ? true : false}
               >
+                {item?.role === "assistant" ? (
+                  <>
+                    <Box
+                      component={"div"}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        margin: "2px 0px",
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          fontWeight: "600",
+                          letterSpacing: 1,
+                        }}
+                      >
+                        Message
+                      </Typography>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "end",
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          onClick={() => copyContent(item.message)}
+                        >
+                          <ContentCopyIcon sx={{ fontSize: "1rem" }} />{" "}
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => submitMsgFeedback(item._id, "good")}
+                        >
+                          <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => submitMsgFeedback(item._id, "bad")}
+                        >
+                          <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  </>
+                ) : (
+                  ""
+                )}
                 <HighlightPopover
                   selectedText={selectedText}
                   id={item.id}
                   loading={loading}
                   videoLookUp={videoLookUp}
                 >
-                  <span
-                    id={"message" + item.id}
-                    onMouseUp={() => handleSelection(item.id)}
-                    onTouchEnd={() => handleSelection(item.id)}
+                  <Typography
+                    component={"span"}
+                    id={"message" + item._id}
+                    onMouseUp={() => handleSelection(item._id)}
+                    onTouchEnd={() => handleSelection(item._id)}
                     style={{
                       wordBreak: "break-all",
                       overflowWrap: "anywhere",
                       fontSize: "0.9rem",
                     }}
                   >
-                    <HiglightedText content={item.text} />
-                  </span>
+                    {item?.message ? (
+                      <HiglightedText content={item.message} />
+                    ) : (
+                      ""
+                    )}
+
+                    {/* {item.message} */}
+                  </Typography>
                 </HighlightPopover>
-                {item?.type === "recived" ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "end",
-                      margin: "7px 0px",
-                    }}
-                  >
-                    <IconButton size="small">
-                      <ContentCopyIcon sx={{ fontSize: "1rem" }} />{" "}
-                    </IconButton>
-                    <IconButton size="small">
-                      <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
-                    </IconButton>
-                    <IconButton size="small">
-                      <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
-                    </IconButton>
-                  </Box>
-                ) : (
-                  ""
-                )}
-                {item?.type === "recived" ? (
-                  <Box
-                    component={"div"}
-                    sx={{
-                      margin: "7px 0px",
-                      fontSize: "0.7rem",
-                      width: "100%",
-                      display: "flex",
-                      textTransform: "capitalize",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ fontWeight: "600", letterSpacing: 1 }}
+                {item?.role === "assistant" ? (
+                  <>
+                    <Box
+                      component={"div"}
+                      sx={{
+                        margin: "0px 0px",
+                        fontSize: "0.7rem",
+                        width: "100%",
+                        display: "flex",
+                        textTransform: "capitalize",
+                        flexDirection: "column",
+                      }}
                     >
-                      Translation:
-                    </Typography>
-                    <Typography variant="caption" display="block" gutterBottom>
-                      {item.translation}
-                    </Typography>
-                    <Box sx={{ display: "flex", justifyContent: "end" }}>
-                      <IconButton size="small">
-                        <ContentCopyIcon sx={{ fontSize: "1rem" }} />
-                      </IconButton>
-                      <IconButton size="small">
-                        <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
-                      </IconButton>
-                      <IconButton size="small">
-                        <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
-                      </IconButton>
+                      <Box
+                        component={"div"}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          margin: "2px 0px",
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            fontWeight: "600",
+                            letterSpacing: 1,
+                          }}
+                        >
+                          Translation:{" "}
+                        </Typography>
+                        <Box sx={{ display: "flex", justifyContent: "end" }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => copyContent(item.translation)}
+                          >
+                            <ContentCopyIcon sx={{ fontSize: "1rem" }} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              submitTranslationFeedback(item._id, "good")
+                            }
+                          >
+                            <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              submitTranslationFeedback(item._id, "bad")
+                            }
+                          >
+                            <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
+                          </IconButton>
+                        </Box>
+                      </Box>
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        gutterBottom
+                      >
+                        {item.translation}
+                      </Typography>
                     </Box>
-                  </Box>
+                  </>
                 ) : (
                   ""
                 )}
 
-                <Box
-                  component={"div"}
+                <Typography
+                  component={"span"}
+                  variant="caption"
                   sx={{
-                    fontSize: "0.7rem",
-                    color: `${item?.type === "recived" ? "#cdffc9" : "black"}`,
+                    fontSize: "0.6rem",
+                    color: "black",
                     position: "absolute",
                     bottom: "3px",
                     right: "8px",
@@ -320,8 +446,8 @@ const ChatContainer = () => {
                     userSelect: "none",
                   }}
                 >
-                  {item.timeStamp}
-                </Box>
+                  {formatStringToTime(item?.timestamp)}
+                </Typography>
               </MessageContainer>
             </>
           );
