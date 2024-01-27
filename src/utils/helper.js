@@ -10,18 +10,12 @@ export const copyContent = async (text) => {
 };
 
 export const checkCase = (str) => {
-  const isUpperCase = /^[A-Z\s]+$/.test(str);
-  const isLowerCase = /^[a-z\s]+$/.test(str);
-
-  if (isUpperCase) {
-    console.log("Message is", "Uppercase");
+  if (str === str.toUpperCase()) {
     return "Uppercase";
-  } else if (isLowerCase) {
-    console.log("Message is", "Lowercase");
-
+  } else if (str === str.toLowerCase()) {
     return "Lowercase";
   } else {
-    console.log("Message is", "Lowercase");
     return "Mixed case";
   }
 };
+
