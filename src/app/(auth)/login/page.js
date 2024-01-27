@@ -48,7 +48,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    document.title = "Login AI-SingLab";
+    document.title = "Login AI-SignLab";
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       router.push("/");

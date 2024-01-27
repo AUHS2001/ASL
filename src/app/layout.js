@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
-  title: "SingLab AS",
+  title: "SignLab AS",
   description: "Sign AI language",
 };
 
