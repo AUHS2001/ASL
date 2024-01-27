@@ -78,8 +78,8 @@ const ChatContainer = () => {
         setMessages([
           {
             _id: 0,
-            message: `HELLO! HOW 'YOU'?`,
-            translation: "HELLO! HOW ARE YOU?",
+            message: `HELLO! HOW YOU?`,
+            translation: "Hello! How are you?",
             timestamp: new Date(),
             role: "assistant",
           },
