@@ -371,7 +371,6 @@ const ChatContainer = () => {
                         fontSize: "0.7rem",
                         width: "100%",
                         display: "flex",
-                        textTransform: "capitalize",
                         flexDirection: "column",
                       }}
                     >
