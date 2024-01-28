@@ -14,7 +14,7 @@ export const submitMsgFeedback = async (messageId, feedBack) => {
     });
     console.log("submitMsgFeedback", response.data);
     if (response?.data?.status_code === 200) {
-      toast.success("Feedback is Submited!");
+      // toast.success("Feedback is Submited!");
     }
     else{
         toast.error(response?.data?.message);
@@ -37,7 +37,7 @@ export const submitTranslationFeedback = async (messageId, feedBack) => {
     });
     console.log("submitMsgFeedback", response.data);
     if (response?.data?.status_code === 200) {
-      toast.success("Feedback is Submited!");
+      // toast.success("Feedback is Submited!");
     }
     else{
         toast.error(response?.data?.message);

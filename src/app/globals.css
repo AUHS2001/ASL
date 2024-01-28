@@ -24,7 +24,7 @@ body{
   margin: 0px 3px;
   border-radius: 5px;
 }
-.messageBox .feedback_actions {
+/* .messageBox .feedback_actions {
   visibility: hidden;
 
 }
@@ -32,7 +32,7 @@ body{
 .messageBox:hover .feedback_actions {
   visibility: visible !important;
 
-}
+} */
 
 ::-webkit-scrollbar {
   width: 8px;
