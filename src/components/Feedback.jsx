@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
+  submitFeedback,
   submitMsgFeedback,
   submitTranslationFeedback,
+  unSubmitFeedback,
 } from "@/utils/apiCalling";
 import { copyContent } from "@/utils/helper";
 import { Box, IconButton, Typography } from "@mui/material";
@@ -25,22 +27,17 @@ const Feedback = (props) => {
   }, []);
 
   const handleFeedBack = (id, feedback) => {
-    if (type === "translation") {
-      if (feedback === "good") {
-        submitTranslationFeedback(id, "good");
-        setIsfeedback("good");
-      } else {
-        submitTranslationFeedback(id, "bad");
-        setIsfeedback("bad");
-      }
-    } else {
-      if (feedback === "good") {
-        submitMsgFeedback(id, "good");
-        setIsfeedback("good");
-      } else {
-        submitMsgFeedback(id, "bad");
-        setIsfeedback("bad");
-      }
+    if (feedback === "good" && isfeedback !=="good") {
+      // submitTranslationFeedback(id, "good");
+      submitFeedback(type, id, "good");
+      setIsfeedback("good");
+    } else if (feedback === "bad" && isfeedback !== "bad") {
+      // submitTranslationFeedback(id, "bad");
+      submitFeedback(type, id, "bad");
+      setIsfeedback("bad");
+    }else{
+      unSubmitFeedback(type,id)
+      setIsfeedback(false)
     }
   };
   return (
