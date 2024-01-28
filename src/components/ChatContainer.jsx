@@ -3,7 +3,6 @@ import { Box, Container, Divider, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import Paper from "@mui/material/Paper";
-import CheckIcon from "@mui/icons-material/Check";
 import { Typography } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "@/constant/ApiUrl";
@@ -12,15 +11,11 @@ import HighlightPopover from "./HighlightPopover";
 import TypingIndicator from "./TypingIndicator";
 import { toast } from "react-toastify";
 import HiglightedText from "./HiglightedText";
-import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+
 import { formatStringToTime } from "@/utils/formatTime";
-import {
-  submitMsgFeedback,
-  submitTranslationFeedback,
-} from "@/utils/apiCalling";
-import { checkCase, copyContent } from "@/utils/helper";
+
+import { checkCase } from "@/utils/helper";
+import Feedback from "./Feedback";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -284,54 +279,17 @@ const ChatContainer = () => {
                 key={item.id}
                 elevation={3}
                 isOwnMessage={item?.role === "user" ? true : false}
+                className="messageBox"
               >
-                {item?.role === "assistant" ? (
+                {item?.role === "assistant"? (
                   <>
-                    <Box
-                      component={"div"}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        margin: "2px 0px",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          fontWeight: "600",
-                          letterSpacing: 1,
-                        }}
-                      >
-                        Message
-                      </Typography>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "end",
-                        }}
-                      >
-                        <IconButton
-                          size="small"
-                          onClick={() => copyContent(item.message)}
-                        >
-                          <ContentCopyIcon sx={{ fontSize: "1rem" }} />{" "}
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => submitMsgFeedback(item._id, "good")}
-                        >
-                          <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => submitMsgFeedback(item._id, "bad")}
-                        >
-                          <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
-                        </IconButton>
-                      </Box>
-                    </Box>
+                    <Feedback
+                      title={"Message"}
+                      type={"message"}
+                      content={item.message}
+                      item={item}
+                      id={item._id}
+                    />
                   </>
                 ) : (
                   ""
@@ -362,7 +320,7 @@ const ChatContainer = () => {
                     {/* {item.message} */}
                   </Typography>
                 </HighlightPopover>
-                {item?.role === "assistant" ? (
+                {item?.role === "assistant"  ? (
                   <>
                     <Box
                       component={"div"}
@@ -374,49 +332,15 @@ const ChatContainer = () => {
                         flexDirection: "column",
                       }}
                     >
-                      <Box
-                        component={"div"}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          margin: "2px 0px",
-                        }}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            fontWeight: "600",
-                            letterSpacing: 1,
-                          }}
-                        >
-                          Translation:{" "}
-                        </Typography>
-                        <Box sx={{ display: "flex", justifyContent: "end" }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => copyContent(item.translation)}
-                          >
-                            <ContentCopyIcon sx={{ fontSize: "1rem" }} />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() =>
-                              submitTranslationFeedback(item._id, "good")
-                            }
-                          >
-                            <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() =>
-                              submitTranslationFeedback(item._id, "bad")
-                            }
-                          >
-                            <ThumbDownOffAltIcon sx={{ fontSize: "1rem" }} />
-                          </IconButton>
-                        </Box>
-                      </Box>
+                      
+                      <Feedback
+                        title={"Translation"}
+                        type={"translation"}
+                        content={item.translation}
+                        item={item}
+                        id={item._id}
+                      />
+
                       <Typography
                         variant="caption"
                         display="block"

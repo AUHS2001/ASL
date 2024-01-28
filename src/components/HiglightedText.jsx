@@ -1,18 +1,9 @@
 import React,{ useMemo } from "react";
+import wordsData from "../../Data/wordCollection.json"; // Adjust the path accordingly
+
 
 const HighlightedText = ({ content }) => {
-  const highlights = [
-    "HELLO",
-    "YOU",
-    "MORE",
-    "CAN",
-    "YES",
-    "WHAT",
-    "YOUR",
-    "HOW",
-    "THIS IS NEW ANSWER",
-  ];
-
+//  const wordsData={'no':""}
   const removePunctuation = (word) => {
     // Remove common punctuation marks
     return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
@@ -32,7 +23,7 @@ const HighlightedText = ({ content }) => {
 
       return (
         <React.Fragment key={index}>
-          {highlights.includes(cleanedWord.toUpperCase()) ? (
+          {wordsData[cleanedWord.toLowerCase()] ? (
             <span className={"highlight"}>{word}</span>
           ) : (
             word + " "
@@ -40,7 +31,7 @@ const HighlightedText = ({ content }) => {
         </React.Fragment>
       );
     });
-  }, [content, highlights]);
+  }, [content]);
 
   return <>{highlightedContent}</>;
 };
