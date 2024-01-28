@@ -1,26 +1,39 @@
-import { useMemo } from "react";
+import React,{ useMemo } from "react";
+import wordsData from "../../Data/wordCollection.json"; // Adjust the path accordingly
 
-const HighlightedText = ({content}) => {
-  const highlights = ["YOU", "MORE", "CAN", "YES","WHAT","YOUR","HOW"];
+
+const HighlightedText = ({ content }) => {
+//  const wordsData={'no':""}
+  const removePunctuation = (word) => {
+    // Remove common punctuation marks
+    return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
+  };
+
+  const removeQuotes = (word) => {
+    // Remove quotes at the beginning and end of the word
+    return word.replace(/^['"]|['"]$/g, "");
+  };
+
   const highlightedContent = useMemo(() => {
     const words = content.split(/\s+/);
 
-    return words.map((word, index) => (
-      <span
-        key={index}
-        className={highlights.includes(word) ? "highlight" : ""}
-      >
-        {word}{" "}
-      </span>
-    ));
-  }, [content, highlights]);
+    return words.map((word, index) => {
+      // Remove quotes before checking for highlights
+      const cleanedWord = removeQuotes(removePunctuation(word));
 
-  return (
-    <div>
-    
-      {highlightedContent}
-    </div>
-  );
+      return (
+        <React.Fragment key={index}>
+          {wordsData[cleanedWord.toLowerCase()] ? (
+            <span className={"highlight"}>{word}</span>
+          ) : (
+            word + " "
+          )}
+        </React.Fragment>
+      );
+    });
+  }, [content]);
+
+  return <>{highlightedContent}</>;
 };
 
 export default HighlightedText;

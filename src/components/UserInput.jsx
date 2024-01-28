@@ -9,23 +9,22 @@ import {
 } from "@mui/material";
 import React from "react";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
-import SendIcon from '@mui/icons-material/Send';
+import SendIcon from "@mui/icons-material/Send";
 
-const UserInput = ({handleSend,inputMessage,setInputMessage}) => {
+const UserInput = ({ handleSend, inputMessage, setInputMessage }) => {
   return (
     <>
-      <Container>
+      <Container maxWidth={"xl"} sx={{borderTop:'1px solid gray',background:"#f0f2f5"}}>
         <Stack>
-          <Box>
+          <Box sx={{ display: "flex", alignItems: "center",height:'10vh',flexDirection:'row', }}>
             <Paper
-              component="form"
+              component="div"
               sx={{
-                p: "4px 4px",
+                p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
                 width: "100%",
-                margin: "1rem 0rem",
-                border:"1px solid #40bd5c"
+                border: "1px solid #40bd5c",
               }}
             >
               {/* <IconButton type="button" sx={{ p: "5px" }} aria-label="search">
@@ -36,21 +35,22 @@ const UserInput = ({handleSend,inputMessage,setInputMessage}) => {
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Type your message..."
                 inputProps={{ "aria-label": "type your message..." }}
-                onChange={(e)=>{setInputMessage(e.target.value)}}
+                onChange={(e) => {
+                  setInputMessage(e.target.value);
+                }}
                 value={inputMessage}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-                    handleSend(e)
+                    handleSend(e);
                     // Handle the Enter key press as needed
                     // For example, submit the form or perform any other action
-                  }}}
-                
+                  }
+                }}
               />
-              <IconButton onClick={(e)=>handleSend(e)}>
+              <IconButton onClick={(e) => handleSend(e)}>
                 <SendIcon />
               </IconButton>
-             
             </Paper>
           </Box>
           <Box></Box>

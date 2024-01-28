@@ -1,33 +1,73 @@
 /* Chat.css */
+
+body{
+  margin:0;
+  padding: 0;
+}
 .chatContainer {
-    padding: 16px; /* Adjust as needed */
+  padding: 16px; /* Adjust as needed */
+}
+
+.typingIndicator {
+  font-style: italic;
+  color: #888; /* Adjust the color as needed */
+  animation: typingAnimation 1s infinite;
+}
+.highlight {
+  /* background-color: rgb(255, 145, 0); */
+  text-decoration-line: underline ;
+  text-decoration-style: dotted ;
+  text-decoration-color: #ff7300;
+  text-decoration-thickness:2px;
+  /* color: white; */
+  padding: 2px 0px;
+  margin: 0px 3px;
+  border-radius: 5px;
+}
+/* .messageBox .feedback_actions {
+  visibility: hidden;
+
+}
+
+.messageBox:hover .feedback_actions {
+  visibility: visible !important;
+
+} */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bbbaba; 
+  border-radius: 50px;
+
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #838383; 
+}
+
+@keyframes typingAnimation {
+  0% {
+    opacity: 0.5;
   }
-  
-  .typingIndicator {
-    font-style: italic;
-    color: #888; /* Adjust the color as needed */
-    animation: typingAnimation 1s infinite;
+  50% {
+    opacity: 1;
   }
-  .highlight {
-    background-color: rgb(255, 145, 0);
-    color:white;
-    padding: 2px 3px;
-    margin:0px 3px;
-    border-radius: 5px;
+  100% {
+    opacity: 0.5;
   }
-  @keyframes typingAnimation {
-    0% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.5;
-    }
-  }
-  
-  .avatar {
-    margin-right: 8px; /* Adjust as needed */
-  }
-  
+}
+
+.avatar {
+  margin-right: 8px; /* Adjust as needed */
+}
