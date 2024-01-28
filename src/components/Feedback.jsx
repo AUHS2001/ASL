@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  submitFeedback,
-  submitMsgFeedback,
-  submitTranslationFeedback,
-  unSubmitFeedback,
-} from "@/utils/apiCalling";
+import {submitFeedback, unSubmitFeedback,} from "@/utils/apiCalling";
 import { copyContent } from "@/utils/helper";
 import { Box, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
@@ -12,7 +7,6 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import "../app/globals.css";
 
 const Feedback = (props) => {
   const [isfeedback, setIsfeedback] = useState("");
