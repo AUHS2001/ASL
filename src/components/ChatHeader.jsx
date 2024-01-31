@@ -15,20 +15,20 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import InsightsIcon from "@mui/icons-material/Insights";
 import { useRouter } from "next/navigation";
-
-
+import Cookies from "js-cookie";
 
 function ChatHeader() {
-
   const pages = [];
   const settings = ["Logout"];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [user, setUser] = React.useState(JSON.parse(localStorage.getItem("user")));
+  const [user, setUser] = React.useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
-  const router=useRouter()
-  
+  const router = useRouter();
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -41,18 +41,18 @@ function ChatHeader() {
   };
 
   const handleCloseUserMenu = (type) => {
-    console.log(type,"tt")
-    if(type==="Logout"){
-      handleLogout()
+    console.log(type, "tt");
+    if (type === "Logout") {
+      handleLogout();
     }
     setAnchorElUser(null);
   };
 
-  const handleLogout=()=>{
-    localStorage.removeItem("user")
-    router.push("/login")
-  }
-
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    Cookies.remove("user");
+    router.push("/login");
+  };
 
   return (
     <AppBar
@@ -73,7 +73,6 @@ function ChatHeader() {
             variant="h6"
             noWrap
             component="a"
-           
             sx={{
               mr: 4,
               display: { xs: "none", md: "flex" },
@@ -128,7 +127,6 @@ function ChatHeader() {
             variant="h5"
             noWrap
             component="a"
-            
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -155,7 +153,15 @@ function ChatHeader() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <button onClick={handleOpenUserMenu} style={{ p: 0,background:'none',border:'none',outline:"none" }}>
+            <button
+              onClick={handleOpenUserMenu}
+              style={{
+                p: 0,
+                background: "none",
+                border: "none",
+                outline: "none",
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -165,7 +171,10 @@ function ChatHeader() {
                 }}
               >
                 <Tooltip title="Open settings">
-                  <Avatar alt={user?.email.slice(0,1)} src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={user?.email.slice(0, 1)}
+                    src="/static/images/avatar/2.jpg"
+                  />
                 </Tooltip>
                 <Box
                   sx={{
@@ -180,7 +189,7 @@ function ChatHeader() {
                     sx={{ lineHeight: 1, mb: 0.3, fontWeight: 500 }}
                   >
                     {" "}
-                    {user?.email.slice(0,6)}
+                    {user?.email.slice(0, 6)}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -210,7 +219,10 @@ function ChatHeader() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={()=>handleCloseUserMenu(setting)}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => handleCloseUserMenu(setting)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

@@ -16,6 +16,7 @@ import { formatStringToTime } from "@/utils/formatTime";
 
 import { checkCase } from "@/utils/helper";
 import Feedback from "./Feedback";
+import Loader from "./Common/Loader";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -33,6 +34,7 @@ const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
 }));
 
 const ChatContainer = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [inputMessage, setInputMessage] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [videoLookUp, setVideoLookUp] = useState("");
@@ -64,23 +66,12 @@ const ChatContainer = () => {
         },
       });
       console.log("getAllChat", response.data);
-      if (
-        response?.data?.status_code === 200 &&
-        response?.data?.data.length > 0
-      ) {
+      if (response?.data?.status_code === 200) {
         setMessages(response.data.data);
-      } else {
-        setMessages([
-          {
-            _id: 0,
-            message: `HELLO! HOW YOU?`,
-            translation: "Hello! How are you?",
-            timestamp: new Date(),
-            role: "assistant",
-          },
-        ]);
+        setIsLoading(false);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error getAllChat", error);
     }
   };
@@ -248,6 +239,7 @@ const ChatContainer = () => {
         }}
         maxWidth={"xl"}
       >
+        {isLoading ? <Loader /> : ""}
         <Box
           sx={{
             display: "flex",
@@ -281,7 +273,7 @@ const ChatContainer = () => {
                 isOwnMessage={item?.role === "user" ? true : false}
                 className="messageBox"
               >
-                {item?.role === "assistant"? (
+                {item?.role === "assistant" ? (
                   <>
                     <Feedback
                       title={"Message"}
@@ -320,7 +312,7 @@ const ChatContainer = () => {
                     {/* {item.message} */}
                   </Typography>
                 </HighlightPopover>
-                {item?.role === "assistant"  ? (
+                {item?.role === "assistant" ? (
                   <>
                     <Box
                       component={"div"}
@@ -332,7 +324,6 @@ const ChatContainer = () => {
                         flexDirection: "column",
                       }}
                     >
-                      
                       <Feedback
                         title={"Translation"}
                         type={"translation"}
