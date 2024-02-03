@@ -60,7 +60,8 @@ const ChatContainer = () => {
       window.document.title = "SignLab AS";
     }
     if (!selectedScenario) {
-      router.push("/");
+      // router.push("/");
+      console.log(selectedScenario," selectedScenario is null")
     }
     console.log(user, "user");
     getAllChat();
