@@ -10,17 +10,16 @@ import { API_URL } from "@/constant/ApiUrl";
 import ButtonLoader from "../Common/ButtonLoader";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-
-
-
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "@/store/features/userSlice";
 
 export default function LoginForm() {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const [isLoading, setIsloading] = useState(false);
 
   const handleSubmit = async (event) => {
-
     event.preventDefault();
     setIsloading(true);
     const data = new FormData(event.currentTarget);
@@ -36,14 +35,12 @@ export default function LoginForm() {
       });
       console.log("Login APi Call", response.data);
       if (response?.data?.status_code === 200) {
-        const user = { email, id: response?.data?.data }
-        localStorage.setItem(
-          "user",
-          JSON.stringify(user)
-        );
+        const user = { email, id: response?.data?.data };
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch(setAuthUser(user));
         Cookies.set("user", JSON.stringify(user));
-        toast.success("Login Successfully!");
         router.push("/");
+        toast.success("Login Successfully!");
       } else {
         setIsloading(false);
         toast.error("User not found!");
@@ -54,15 +51,6 @@ export default function LoginForm() {
       toast.error("Something Went Wrong!");
     }
   };
-
-  useEffect(() => {
-    document.title = "Login AI-SignLab";
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      router.push("/");
-    } else {
-    }
-  }, []);
 
   return (
     <>

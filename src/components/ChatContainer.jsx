@@ -17,6 +17,11 @@ import { formatStringToTime } from "@/utils/formatTime";
 import { checkCase } from "@/utils/helper";
 import Feedback from "./Feedback";
 import Loader from "./Common/Loader";
+import MyDialog from "./Common/MyDialog";
+import WrongFeedback from "./WrongFeedback";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import ScenarioBar from "./ScenarioBar";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -35,6 +40,7 @@ const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
 
 const ChatContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [videoLookUp, setVideoLookUp] = useState("");
@@ -42,12 +48,19 @@ const ChatContainer = () => {
   const [typingIndiacator, setTypingIndiacator] = useState(false);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [messages, setMessages] = useState([]);
+  const [wrongFeedback, setWrongFeedback] = useState("");
+
+  const selectedScenario = useSelector((state) => state?.aiType?.scenario);
+  const router = useRouter();
 
   // ===============First Time Render ================
 
   useEffect(() => {
     if (window) {
       window.document.title = "SignLab AS";
+    }
+    if (!selectedScenario) {
+      router.push("/");
     }
     console.log(user, "user");
     getAllChat();
@@ -63,6 +76,7 @@ const ChatContainer = () => {
         method: "POST",
         data: {
           user_id: user?.id,
+          scenario_id: selectedScenario?._id,
         },
       });
       console.log("getAllChat", response.data);
@@ -103,6 +117,7 @@ const ChatContainer = () => {
       timestamp: new Date(),
       role: "user",
     };
+
     let preMsg = [...messages, newMessage];
     await setMessages(preMsg);
     setTypingIndiacator(true);
@@ -125,6 +140,8 @@ const ChatContainer = () => {
         data: {
           user_msg: message,
           user_id: user?.id,
+          scenario_id: selectedScenario._id,
+          scene_id: selectedScenario.scene_id,
         },
       });
       console.log(res);
@@ -152,6 +169,8 @@ const ChatContainer = () => {
         data: {
           user_msg: message,
           user_id: user?.id,
+          scenario_id: selectedScenario._id,
+          scene_id: selectedScenario.scene_id,
         },
       });
       console.log(res);
@@ -229,6 +248,11 @@ const ChatContainer = () => {
     }
   };
 
+  const handleWrongFeedback = (type, id) => {
+    setWrongFeedback({ type, id });
+    setIsDialogOpen(true);
+  };
+
   return (
     <>
       <Container
@@ -264,6 +288,20 @@ const ChatContainer = () => {
           </span>
         </Box>
 
+        <MyDialog
+          title={"Provide additional feedback"}
+          dialogOpen={isDialogOpen}
+          setDialogOpen={setIsDialogOpen}
+          closeable={true}
+        >
+          <WrongFeedback
+            wrongFeedback={wrongFeedback}
+            setWrongFeedback={setWrongFeedback}
+            setDialogOpen={setIsDialogOpen}
+          />
+        </MyDialog>
+
+        <ScenarioBar />
         {messages.map((item) => {
           return (
             <>
@@ -281,6 +319,7 @@ const ChatContainer = () => {
                       content={item.message}
                       item={item}
                       id={item._id}
+                      handleWrongFeedback={handleWrongFeedback}
                     />
                   </>
                 ) : (
@@ -330,6 +369,7 @@ const ChatContainer = () => {
                         content={item.translation}
                         item={item}
                         id={item._id}
+                        handleWrongFeedback={handleWrongFeedback}
                       />
 
                       <Typography
@@ -366,6 +406,7 @@ const ChatContainer = () => {
             </>
           );
         })}
+
         {typingIndiacator ? <TypingIndicator /> : ""}
       </Container>
       <UserInput

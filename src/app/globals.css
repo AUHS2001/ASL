@@ -3,6 +3,13 @@
 body{
   margin:0;
   padding: 0;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  color: rgb(52, 49, 76);
+  background-color:#fafafa;
+  line-height:1.5;
+  font-weight: 400;
+  font-size:14px;
+  letter-spacing: 0.00938em;
 }
 
 .bg-tech{

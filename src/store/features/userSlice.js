@@ -1,20 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
-  name: 'user',
-  initialState: {
-    confirmNotification: false,
-  },
+  name: "user",
+  initialState: {},
 
   reducers: {
-    setConfirmNotification: (state, action) => {
-      state.confirmNotification = action.payload
-    }
-  }
-})
+    setAuthUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
+});
 
-export const {
-  setConfirmNotification
-} = userSlice.actions
+export const { setAuthUser } = userSlice.actions;
 
-export default userSlice.reducer
+export default userSlice.reducer;

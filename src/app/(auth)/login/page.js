@@ -21,6 +21,7 @@ export default function Home() {
             justifyContent={"center"}
             alignItems={"center"}
           >
+            
             <CssBaseline />
             <Grid
               className="bg-tech"

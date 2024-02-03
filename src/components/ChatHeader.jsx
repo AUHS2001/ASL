@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,37 +16,28 @@ import AdbIcon from "@mui/icons-material/Adb";
 import InsightsIcon from "@mui/icons-material/Insights";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
 
 function ChatHeader() {
   const pages = [];
   const settings = ["Logout"];
-
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [user, setUser] = React.useState(
-    JSON.parse(localStorage.getItem("user"))
-  );
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   const router = useRouter();
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (type) => {
-    console.log(type, "tt");
-    if (type === "Logout") {
-      handleLogout();
+  useEffect(() => {
+    if (user) {
+      Cookies.set(user);
     }
-    setAnchorElUser(null);
-  };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -54,14 +45,22 @@ function ChatHeader() {
     router.push("/login");
   };
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#f0f2f5",
+        backgroundColor: "#ffffff",
         boxShadow: "none",
         color: "black",
         borderBottom: "1px solid #bdbdbd",
+        padding: "0px 20px 0px 18px",
       }}
     >
       <Container maxWidth="xl">
@@ -86,43 +85,6 @@ function ChatHeader() {
             AI SignLab
           </Typography>
 
-          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} >
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -152,82 +114,105 @@ function ChatHeader() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <button
-              onClick={handleOpenUserMenu}
-              style={{
-                p: 0,
-                background: "none",
-                border: "none",
-                outline: "none",
+          <Box
+            onClick={handleClick}
+            sx={{
+              display: "flex",
+              // flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+              borderRadius: "24px",
+              cursor: "pointer",
+              padding: "4px",
+              backgroundColor: "rgba(0, 0, 0, 0.04)",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                margin: "0 8px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  // flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+              <Typography
+                variant="subtitle2"
+                sx={{ lineHeight: 1, mb: 0.3, fontWeight: 500 }}
               >
-                <Tooltip title="Open settings">
-                  <Avatar
-                    alt={user?.email.slice(0, 1)}
-                    src="/static/images/avatar/2.jpg"
-                  />
-                </Tooltip>
-                <Box
-                  sx={{
-                    ml: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "start",
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ lineHeight: 1, mb: 0.3, fontWeight: 500 }}
-                  >
-                    {" "}
-                    {user?.email.slice(0, 6)}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ lineHeight: 1, fontWeight: 300, color: "#8b8b8b" }}
-                  >
-                    {" "}
-                    {user?.email}
-                  </Typography>
-                </Box>
-              </Box>
-            </button>
+                {user?.email.slice(0, 6)}
+              </Typography>
+            </Box>
 
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => handleCloseUserMenu(setting)}
-                >
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            <Tooltip title="Open Profile">
+              <IconButton
+                size="small"
+                sx={{ ml: 0 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <Avatar sx={{ width: 32, height: 32 }}>
+                  {user?.email.slice(0, 1)}
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </Box>
+          <Menu
+            anchorEl={anchorEl}
+            id="Profile-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&::before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={handleClose}>
+              <Avatar /> My account
+            </MenuItem>
+
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </Container>
     </AppBar>

@@ -7,6 +7,7 @@ const HighlightedText = ({ content }) => {
   const removePunctuation = (word) => {
     // Remove common punctuation marks
     return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
+    
   };
 
   const removeQuotes = (word) => {
