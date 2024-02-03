@@ -21,7 +21,7 @@ const ScenarioBar = () => {
           {selectedScenario?.description}
         </H4>
 
-        <Paragraph color="text.secondary" maxWidth={770}>
+        <Paragraph color="text.secondary" >
         {selectedScenario?.scene}
         </Paragraph>
       </StyledCard>

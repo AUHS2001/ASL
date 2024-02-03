@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/Context/AuthContext";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/store/features/userSlice";
+import { setAIType } from "@/store/features/aiTypeSlice";
 
 export default function DashboardLayout({ children }) {
   const [isloading, setIsloading] = useState(true);
@@ -12,13 +13,20 @@ export default function DashboardLayout({ children }) {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user, "user");
+    const currScenario = JSON.parse(localStorage.getItem("currScenario"));
     if (user) {
-      setIsloading(false);
       dispatch(setAuthUser(user));
     } else {
       router.push("/login");
     }
+
+    if (currScenario) {
+      dispatch(setAIType(currScenario));
+    } else {
+      router.push("/");
+    }
+
+    setIsloading(false);
   }, []);
 
   return (

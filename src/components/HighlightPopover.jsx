@@ -16,6 +16,7 @@ export default function HighlightPopover({
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
+    console.log(selectedText.highlightText,"selectedText.highlightText")
     if (selectedText.highlightText) {
       setAnchorEl(event.currentTarget);
     }

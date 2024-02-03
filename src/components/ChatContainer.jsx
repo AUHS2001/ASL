@@ -59,13 +59,12 @@ const ChatContainer = () => {
     if (window) {
       window.document.title = "SignLab AS";
     }
-    if (!selectedScenario) {
-      // router.push("/");
-      console.log(selectedScenario," selectedScenario is null")
+    console.log(selectedScenario, " selectedScenario is null");
+    setIsLoading(true);
+    if (selectedScenario) {
+      getAllChat();
     }
-    console.log(user, "user");
-    getAllChat();
-  }, []);
+  }, [selectedScenario]);
 
   // =========================
 
@@ -256,165 +255,180 @@ const ChatContainer = () => {
 
   return (
     <>
-      <Container
-        sx={{
-          maxHeight: "80vh",
-          height: { xs: "75vh", md: "74vh", lg: "79vh" },
-          overflow: "auto",
-        }}
-        maxWidth={"xl"}
-      >
-        {isLoading ? <Loader /> : ""}
+      <Container maxWidth={"xl"}>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            margin: "0.5rem 0rem",
-            position: "sticky",
-            top: "10px",
-            zIndex: "1000",
+            maxHeight: "80vh",
+            height: { xs: "75vh", md: "74vh", lg: "79vh" },
+            overflow: "auto",
           }}
         >
-          <span
-            style={{
-              padding: "0.3rem 0.4rem",
-              background: "#f2f2f2",
-              borderRadius: "0.45rem",
-              border: "2px solid #40bd5c",
-              fontSize: "0.8rem",
-            }}
-          >
-            Today
-          </span>
-        </Box>
-
-        <MyDialog
-          title={"Provide additional feedback"}
-          dialogOpen={isDialogOpen}
-          setDialogOpen={setIsDialogOpen}
-          closeable={true}
-        >
-          <WrongFeedback
-            wrongFeedback={wrongFeedback}
-            setWrongFeedback={setWrongFeedback}
-            setDialogOpen={setIsDialogOpen}
-          />
-        </MyDialog>
-
-        <ScenarioBar />
-        {messages.map((item) => {
-          return (
+          {isLoading ? (
+            <Loader />
+          ) : (
             <>
-              <MessageContainer
-                key={item.id}
-                elevation={3}
-                isOwnMessage={item?.role === "user" ? true : false}
-                className="messageBox"
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  margin: "0.5rem 0rem",
+                  position: "sticky",
+                  top: "10px",
+                  zIndex: "1000",
+                }}
               >
-                {item?.role === "assistant" ? (
-                  <>
-                    <Feedback
-                      title={"Message"}
-                      type={"message"}
-                      content={item.message}
-                      item={item}
-                      id={item._id}
-                      handleWrongFeedback={handleWrongFeedback}
-                    />
-                  </>
-                ) : (
-                  ""
-                )}
-                <HighlightPopover
-                  selectedText={selectedText}
-                  id={item.id}
-                  loading={loading}
-                  videoLookUp={videoLookUp}
-                >
-                  <Typography
-                    component={"span"}
-                    id={"message" + item._id}
-                    onMouseUp={() => handleSelection(item._id)}
-                    onTouchEnd={() => handleSelection(item._id)}
-                    style={{
-                      wordBreak: "break-all",
-                      overflowWrap: "anywhere",
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    {item?.message ? (
-                      <HiglightedText content={item.message} />
-                    ) : (
-                      ""
-                    )}
-
-                    {/* {item.message} */}
-                  </Typography>
-                </HighlightPopover>
-                {item?.role === "assistant" ? (
-                  <>
-                    <Box
-                      component={"div"}
-                      sx={{
-                        marginTop: "5px",
-                        fontSize: "0.7rem",
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <Feedback
-                        title={"Translation"}
-                        type={"translation"}
-                        content={item.translation}
-                        item={item}
-                        id={item._id}
-                        handleWrongFeedback={handleWrongFeedback}
-                      />
-
-                      <Typography
-                        variant="caption"
-                        display="block"
-                        gutterBottom
-                      >
-                        {item.translation}
-                      </Typography>
-                    </Box>
-                  </>
-                ) : (
-                  ""
-                )}
-
-                <Typography
-                  component={"span"}
-                  variant="caption"
-                  sx={{
-                    fontSize: "0.6rem",
-                    color: "black",
-                    position: "absolute",
-                    bottom: "3px",
-                    right: "8px",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    userSelect: "none",
+                <span
+                  style={{
+                    padding: "0.3rem 0.4rem",
+                    background: "#f2f2f2",
+                    borderRadius: "0.45rem",
+                    border: "2px solid #40bd5c",
+                    fontSize: "0.8rem",
                   }}
                 >
-                  {formatStringToTime(item?.timestamp)}
-                </Typography>
-              </MessageContainer>
-            </>
-          );
-        })}
+                  Today
+                </span>
+              </Box>
 
-        {typingIndiacator ? <TypingIndicator /> : ""}
+              <ScenarioBar />
+              {messages.map((item) => {
+                return (
+                  <>
+                    <MessageContainer
+                      key={item.id}
+                      elevation={3}
+                      isOwnMessage={item?.role === "user" ? true : false}
+                      className="messageBox"
+                    >
+                      {item?.role === "assistant" ? (
+                        <>
+                          <Feedback
+                            title={"Message"}
+                            type={"message"}
+                            content={item.message}
+                            item={item}
+                            id={item._id}
+                            handleWrongFeedback={handleWrongFeedback}
+                          />
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      <HighlightPopover
+                        selectedText={selectedText}
+                        id={item.id}
+                        loading={loading}
+                        videoLookUp={videoLookUp}
+                      >
+                        <Typography
+                          component={"span"}
+                          id={"message" + item._id}
+                          onMouseUp={() => handleSelection(item._id)}
+                          onTouchEnd={() => handleSelection(item._id)}
+                          style={{
+                            wordBreak: "break-word",
+                            overflowWrap: "anywhere",
+                            fontSize: "0.9rem",
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                          }}
+                        >
+                          {item?.message ? (
+                            <HiglightedText
+                              content={item.message}
+                              setSelectedText={setSelectedText}
+                            />
+                          ) : (
+                            ""
+                          )}
+
+                          {/* {item.message} */}
+                        </Typography>
+                      </HighlightPopover>
+                      {item?.role === "assistant" ? (
+                        <>
+                          <Box
+                            component={"div"}
+                            sx={{
+                              marginTop: "5px",
+                              fontSize: "0.7rem",
+                              width: "100%",
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <Feedback
+                              title={"Translation"}
+                              type={"translation"}
+                              content={item.translation}
+                              item={item}
+                              id={item._id}
+                              handleWrongFeedback={handleWrongFeedback}
+                            />
+
+                            <Typography
+                              variant="caption"
+                              display="block"
+                              gutterBottom
+                            >
+                              {item.translation}
+                            </Typography>
+                          </Box>
+                        </>
+                      ) : (
+                        ""
+                      )}
+
+                      <Typography
+                        component={"span"}
+                        variant="caption"
+                        sx={{
+                          fontSize: "0.6rem",
+                          color: "black",
+                          position: "absolute",
+                          bottom: "3px",
+                          right: "8px",
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          userSelect: "none",
+                        }}
+                      >
+                        {formatStringToTime(item?.timestamp)}
+                      </Typography>
+                    </MessageContainer>
+                  </>
+                );
+              })}
+
+              {typingIndiacator ? <TypingIndicator /> : ""}
+            </>
+          )}
+        </Box>
+        {!isLoading ? (
+          <UserInput
+            handleSend={handleSend}
+            inputMessage={inputMessage}
+            setInputMessage={setInputMessage}
+          />
+        ) : (
+          ""
+        )}
       </Container>
-      <UserInput
-        handleSend={handleSend}
-        inputMessage={inputMessage}
-        setInputMessage={setInputMessage}
-      />
+      <MyDialog
+        title={"Provide additional feedback"}
+        dialogOpen={isDialogOpen}
+        setDialogOpen={setIsDialogOpen}
+        closeable={true}
+      >
+        <WrongFeedback
+          wrongFeedback={wrongFeedback}
+          setWrongFeedback={setWrongFeedback}
+          setDialogOpen={setIsDialogOpen}
+        />
+      </MyDialog>
     </>
   );
 };

@@ -94,18 +94,7 @@ const FeedbackMenu = ({ handleFeedBack, isfeedback, id, content }) => {
             <ContentCopyIcon sx={{ fontSize: "1rem" }} />
           </IconButton>
         </MyToolTip>
-        <MyToolTip title={"Acceptable"}>
-          <IconButton
-            size="small"
-            onClick={() => handleFeedBack(id, "acceptable")}
-          >
-            {isfeedback === "acceptable" ? (
-              <OfflinePinIcon sx={{ fontSize: "1rem" }} />
-            ) : (
-              <OfflinePinOutlinedIcon sx={{ fontSize: "1rem" }} />
-            )}
-          </IconButton>
-        </MyToolTip>
+
         <MyToolTip title={"Best"}>
           <IconButton size="small" onClick={() => handleFeedBack(id, "best")}>
             {isfeedback === "best" ? (
@@ -122,6 +111,19 @@ const FeedbackMenu = ({ handleFeedBack, isfeedback, id, content }) => {
               <ThumbUpIcon sx={{ fontSize: "1rem" }} />
             ) : (
               <ThumbUpOffAltIcon sx={{ fontSize: "1rem" }} />
+            )}
+          </IconButton>
+        </MyToolTip>
+
+        <MyToolTip title={"Acceptable"}>
+          <IconButton
+            size="small"
+            onClick={() => handleFeedBack(id, "acceptable")}
+          >
+            {isfeedback === "acceptable" ? (
+              <OfflinePinIcon sx={{ fontSize: "1rem" }} />
+            ) : (
+              <OfflinePinOutlinedIcon sx={{ fontSize: "1rem" }} />
             )}
           </IconButton>
         </MyToolTip>
