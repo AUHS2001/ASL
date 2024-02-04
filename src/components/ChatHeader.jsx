@@ -33,6 +33,7 @@ function ChatHeader() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("currScenario");
     Cookies.remove("user");
     router.push("/login");
   };

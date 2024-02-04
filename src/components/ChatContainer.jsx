@@ -1,6 +1,6 @@
 "use client";
 import { Box, Container, Divider, IconButton } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/system";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
@@ -22,6 +22,7 @@ import WrongFeedback from "./WrongFeedback";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import ScenarioBar from "./ScenarioBar";
+import ScrollIndicator from "./ScrollIndicator";
 
 const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
   position: "relative",
@@ -49,9 +50,9 @@ const ChatContainer = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [messages, setMessages] = useState([]);
   const [wrongFeedback, setWrongFeedback] = useState("");
-
   const selectedScenario = useSelector((state) => state?.aiType?.scenario);
-  const router = useRouter();
+  const messageContainerRef = useRef(null);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
 
   // ===============First Time Render ================
 
@@ -125,7 +126,6 @@ const ChatContainer = () => {
     } else {
       messageConversion(userMessage, preMsg);
     }
-   
   };
 
   // =========================
@@ -157,6 +157,10 @@ const ChatContainer = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    handleScrollDown();
+  }, [messages]);
 
   // =====================================================
 
@@ -252,6 +256,26 @@ const ChatContainer = () => {
     setIsDialogOpen(true);
   };
 
+  const handleScrollDown = () => {
+    // Smooth scroll down to the bottom of the message container
+    messageContainerRef?.current.scrollTo({
+      top: messageContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+    // setShowScrollIndicator(false);
+  };
+
+  const handleScroll = () => {
+    console.log("ddd");
+    // Set showScrollIndicator to true when the user scrolls up
+    const container = messageContainerRef?.current;
+    if (container) {
+      const isAtBottom =
+        container.scrollTop + container.clientHeight === container.scrollHeight;
+      setShowScrollIndicator(!isAtBottom);
+      // setShowScrollIndicator(messageContainerRef.current.scrollTop > 0);
+    }
+  };
   return (
     <>
       <Container maxWidth={"xl"}>
@@ -261,11 +285,20 @@ const ChatContainer = () => {
             height: { xs: "75vh", md: "74vh", lg: "79vh" },
             overflow: "auto",
           }}
+          ref={messageContainerRef}
+          onScroll={() => { handleScroll();}}
         >
+          {" "}
           {isLoading ? (
             <Loader />
           ) : (
             <>
+              <ScrollIndicator
+                messageContainerRef={messageContainerRef}
+                handleScrollDown={handleScrollDown}
+                showScrollIndicator={showScrollIndicator}
+                setShowScrollIndicator={setShowScrollIndicator}
+              />
               <Box
                 sx={{
                   display: "flex",
@@ -402,7 +435,7 @@ const ChatContainer = () => {
                 );
               })}
 
-              {typingIndiacator ? <TypingIndicator /> : ""}
+              <TypingIndicator typing={typingIndiacator} />
             </>
           )}
         </Box>

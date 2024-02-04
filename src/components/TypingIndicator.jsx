@@ -2,7 +2,7 @@ import React from "react";
 import Paper from "@mui/material/Paper";
 import styled from "@emotion/styled";
 
-const TypingIndicator = () => {
+const TypingIndicator = ({typing}) => {
   const MessageContainer = styled(Paper)(({ theme, isOwnMessage }) => ({
     position: "relative",
     maxWidth: "50%",
@@ -18,10 +18,11 @@ const TypingIndicator = () => {
     //   textAlign: isOwnMessage ? "right" : "left",
     fontSize: "0.8rem",
     cursor: "pointer",
+    visibility:typing?"visible":'hidden'
   }));
   return (
     <>
-      <MessageContainer elevation={3} isOwnMessage={false}>
+      <MessageContainer elevation={3} isOwnMessage={false} typing={typing}>
         <span className="typingIndicator">AI is typing...</span>
       </MessageContainer>
     </>
