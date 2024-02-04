@@ -21,18 +21,17 @@ export default function Home() {
             justifyContent={"center"}
             alignItems={"center"}
           >
-            
             <CssBaseline />
             <Grid
               className="bg-tech"
               item
               xs={false}
-              sm={4}
+              sm={5}
               md={4}
               component={Paper}
               elevation={6}
               square
-              sx={{display:{xs:"none",sm:"flex"}}}
+              sx={{ display: { xs: "none", sm: "flex" } }}
               overflow={"hidden"}
               // bgcolor={"green"}
               minHeight={"400px"}
@@ -41,15 +40,17 @@ export default function Home() {
               <Image
                 alt="Login Bg"
                 src="/images/Ai-image-logo.jpeg"
-                width={450}
-                height={400}
+                width={500}
+                height={500}
+                sizes="100vw"
+                style={{ width: "100%", height: "auto" }}
               />
             </Grid>
 
             <Grid
               item
               xs={12}
-              sm={8}
+              sm={7}
               md={6}
               component={Paper}
               elevation={6}
