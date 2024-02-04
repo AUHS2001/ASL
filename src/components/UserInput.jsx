@@ -20,8 +20,10 @@ const UserInput = ({ handleSend }) => {
   const debouncedValue = useDebounce(msgInput, 500);
 
   const search = useCallback(async () => {
-    const results = await searchWord(debouncedValue);
-    setKeyWords(results);
+    if(debouncedValue){
+      const results = await searchWord(debouncedValue);
+      setKeyWords(results);
+    }
   }, [debouncedValue]);
 
   useEffect(() => {
@@ -70,10 +72,7 @@ const UserInput = ({ handleSend }) => {
                 border: "1px solid #40bd5c",
               }}
             >
-              {/* <IconButton type="button" sx={{ p: "5px" }} aria-label="search">
-                <SearchIcon />
-                
-              </IconButton> */}
+              
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Type your message..."
@@ -91,7 +90,7 @@ const UserInput = ({ handleSend }) => {
                   }
                 }}
               />
-              <IconButton onClick={(e) => handleMsgSend(e)}>
+              <IconButton onClick={() => handleMsgSend()}>
                 <SendIcon />
               </IconButton>
             </Paper>
