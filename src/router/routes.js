@@ -1,3 +1,3 @@
-export const protectedRoutes = ["/"];
+export const protectedRoutes = ["/","/chat"];
 export const authRoutes = ["/login"];
-export const publicRoutes = ["/about"];
+export const publicRoutes = ["/test"];

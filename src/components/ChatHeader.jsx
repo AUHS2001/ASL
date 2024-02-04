@@ -61,7 +61,7 @@ function ChatHeader() {
         handleLogout();
         break;
       case "scenario":
-        setIsScenrioModal(true)
+        router.push("/");
         break;
       default:
     }
@@ -230,13 +230,13 @@ function ChatHeader() {
         </Container>
       </AppBar>
 
-      <MyDialog
+      {/* <MyDialog
         dialogOpen={isScenarioModal}
         setDialogOpen={setIsScenrioModal}
         title={"Select Your AI Assistant"}
       >
         <ScenarioList setIsScenrioModal={setIsScenrioModal} />
-      </MyDialog>
+      </MyDialog> */}
     </>
   );
 }
