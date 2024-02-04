@@ -1,26 +1,38 @@
+import Chip from "@mui/material/Chip";
 
-
-
-const SearchList = ({ results, setInputMessage,handleMsgSend }) => {
+const SearchList = ({
+  results,
+  setInputMessage,
+  handleMsgSend,
+  setKeyWords,
+}) => {
   const handleClick = (e, word) => {
     e.preventDefault();
-    setInputMessage(word);
-    handleMsgSend(word)
+    setInputMessage(word.toUpperCase());
+    setKeyWords([]);
   };
   return (
-    <div className="results-list">
-      {results.map((result,ind) => {
-        return (
-          <div
-          key={"serach-res"+ind}
-            className="search-result"
-            onClick={(e) => handleClick(e, result)}
-          >
-            {result}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      {results.length > 0 ? (
+        <div className="results-list">
+          {results.map((result, ind) => {
+            return (
+              <>
+                <Chip
+                  key={"serach-res" + ind}
+                  label={result.toUpperCase()}
+                  onClick={(e) => handleClick(e, result)}
+                  //   variant="outlined"
+                  sx={{ margin: "0px 3px" }}
+                />
+              </>
+            );
+          })}
+        </div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 

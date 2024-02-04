@@ -21,7 +21,7 @@ const UserInput = ({ handleSend }) => {
 
   const search = useCallback(async () => {
     if (debouncedValue) {
-      const results = await searchWord(debouncedValue);
+      const results = await searchWord(debouncedValue.toLowerCase());
       setKeyWords(results);
     }
   }, [debouncedValue]);
@@ -58,6 +58,7 @@ const UserInput = ({ handleSend }) => {
             results={keyWords}
             setInputMessage={setMsgInput}
             handleMsgSend={handleMsgSend}
+            setKeyWords={setKeyWords}
           />
           <Box
             sx={{
