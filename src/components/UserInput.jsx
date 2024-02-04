@@ -20,7 +20,7 @@ const UserInput = ({ handleSend }) => {
   const debouncedValue = useDebounce(msgInput, 500);
 
   const search = useCallback(async () => {
-    if(debouncedValue){
+    if (debouncedValue) {
       const results = await searchWord(debouncedValue);
       setKeyWords(results);
     }
@@ -41,13 +41,19 @@ const UserInput = ({ handleSend }) => {
     }
   };
 
+  useEffect(() => {
+    if (!msgInput) {
+      setKeyWords([]);
+    }
+  }, [msgInput]);
+
   return (
     <>
       <Container
         maxWidth={"xl"}
         sx={{ borderTop: "1px solid gray", background: "#f0f2f5" }}
       >
-        <Stack sx={{ position: "relative",}}>
+        <Stack sx={{ position: "relative" }}>
           <SearchList
             results={keyWords}
             setInputMessage={setMsgInput}
@@ -59,7 +65,6 @@ const UserInput = ({ handleSend }) => {
               alignItems: "center",
               height: "10vh",
               flexDirection: "row",
-             
             }}
           >
             <Paper
@@ -72,7 +77,6 @@ const UserInput = ({ handleSend }) => {
                 border: "1px solid #40bd5c",
               }}
             >
-              
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Type your message..."
