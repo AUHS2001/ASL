@@ -232,7 +232,7 @@ function ChatHeader() {
       <MyDialog
         dialogOpen={isScenarioModal}
         setDialogOpen={setIsScenrioModal}
-        title={"Select Your Ai Aisstant"}
+        title={"Select Your AI Assistant"}
       >
         <ScenarioList setIsScenrioModal={setIsScenrioModal} />
       </MyDialog>

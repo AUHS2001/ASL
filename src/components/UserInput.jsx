@@ -7,16 +7,59 @@ import {
   IconButton,
   InputBase,
 } from "@mui/material";
-import React from "react";
-import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
+import React, { useCallback, useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
+import { searchWord } from "@/app/action";
+import SearchList from "@/components/SearchList";
+import "../styles/UserInput.css";
+import { useDebounce } from "@/utils/hooks";
 
-const UserInput = ({ handleSend, inputMessage, setInputMessage }) => {
+const UserInput = ({ handleSend }) => {
+  const [keyWords, setKeyWords] = useState([]);
+  const [msgInput, setMsgInput] = useState("");
+  const debouncedValue = useDebounce(msgInput, 500);
+
+  const search = useCallback(async () => {
+    const results = await searchWord(debouncedValue);
+    setKeyWords(results);
+  }, [debouncedValue]);
+
+  useEffect(() => {
+    search();
+  }, [debouncedValue, search]);
+
+  const handleMsgSend = (selectWord) => {
+    let inputMsg = msgInput;
+    setMsgInput("");
+    setKeyWords([]);
+    if (selectWord) {
+      handleSend(selectWord);
+    } else {
+      handleSend(inputMsg);
+    }
+  };
+
   return (
     <>
-      <Container maxWidth={"xl"} sx={{borderTop:'1px solid gray',background:"#f0f2f5"}}>
-        <Stack>
-          <Box sx={{ display: "flex", alignItems: "center",height:'10vh',flexDirection:'row', }}>
+      <Container
+        maxWidth={"xl"}
+        sx={{ borderTop: "1px solid gray", background: "#f0f2f5" }}
+      >
+        <Stack sx={{ position: "relative",}}>
+          <SearchList
+            results={keyWords}
+            setInputMessage={setMsgInput}
+            handleMsgSend={handleMsgSend}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              height: "10vh",
+              flexDirection: "row",
+             
+            }}
+          >
             <Paper
               component="div"
               sx={{
@@ -36,24 +79,23 @@ const UserInput = ({ handleSend, inputMessage, setInputMessage }) => {
                 placeholder="Type your message..."
                 inputProps={{ "aria-label": "type your message..." }}
                 onChange={(e) => {
-                  setInputMessage(e.target.value);
+                  setMsgInput(e.target.value);
                 }}
-                value={inputMessage}
+                value={msgInput}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    handleSend(e);
+                    handleMsgSend();
                     // Handle the Enter key press as needed
                     // For example, submit the form or perform any other action
                   }
                 }}
               />
-              <IconButton onClick={(e) => handleSend(e)}>
+              <IconButton onClick={(e) => handleMsgSend(e)}>
                 <SendIcon />
               </IconButton>
             </Paper>
           </Box>
-          <Box></Box>
         </Stack>
       </Container>
     </>

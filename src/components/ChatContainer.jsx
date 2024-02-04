@@ -104,16 +104,15 @@ const ChatContainer = () => {
   };
 
   // ============= User Message Handler ===================
-  const handleSend = async () => {
-    console.log("handle", inputMessage);
-    if (inputMessage.trim() === "") {
+  const handleSend = async (userMessage) => {
+    console.log("handle", userMessage);
+    if (userMessage.trim() === "") {
       return;
     }
-
     let newId = messages.length + 1;
     const newMessage = {
       _id: newId,
-      message: inputMessage,
+      message: userMessage,
       timestamp: new Date(),
       role: "user",
     };
@@ -121,12 +120,12 @@ const ChatContainer = () => {
     let preMsg = [...messages, newMessage];
     await setMessages(preMsg);
     setTypingIndiacator(true);
-    if (checkCase(inputMessage) === "Uppercase") {
-      sendMessage(inputMessage, preMsg);
+    if (checkCase(userMessage) === "Uppercase") {
+      sendMessage(userMessage, preMsg);
     } else {
-      messageConversion(inputMessage, preMsg);
+      messageConversion(userMessage, preMsg);
     }
-    setInputMessage("");
+   
   };
 
   // =========================
