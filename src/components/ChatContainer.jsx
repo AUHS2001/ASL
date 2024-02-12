@@ -379,7 +379,8 @@ const ChatContainer = () => {
                           {/* {item.message} */}
                         </Typography>
                       </HighlightPopover>
-                      {item?.role === "assistant" ? (
+                      {/* ========== Translation ============ */}
+                      {/* {item?.role === "assistant" ? (
                         <>
                           <Box
                             component={"div"}
@@ -411,7 +412,7 @@ const ChatContainer = () => {
                         </>
                       ) : (
                         ""
-                      )}
+                      )} */}
 
                       <Typography
                         component={"span"}
