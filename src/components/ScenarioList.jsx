@@ -20,9 +20,8 @@ const StyledCard = styled(Card)(({ theme, index, aiScenario }) => ({
   flexDirection: "column",
   justifyContent: "center",
   borderRadius: "10px",
-  border: `1px solid ${
-    index === aiScenario.ind ? theme.palette.primary.main : "transparent"
-  }`,
+  border: `1px solid ${index === aiScenario.ind ? theme.palette.primary.main : "transparent"
+    }`,
   color: index === aiScenario.ind && theme.palette.primary.main,
 
   transition: "all 200ms ease-in",
@@ -61,7 +60,7 @@ const ScenarioList = ({ setIsScenrioModal }) => {
         if (preScenrio && !selectedScenario) {
           dispatch(setAIType(preScenrio));
         } else if (!selectedScenario) {
-          const currScenario = { ...resp?.data?.[0], ind: 0 };
+          const currScenario = { ...resp?.data?.[0], ind: 0, profileImg: imgList[0] };
           localStorage.setItem("currScenario", JSON.stringify(currScenario));
           dispatch(setAIType(currScenario));
         }
@@ -73,8 +72,9 @@ const ScenarioList = ({ setIsScenrioModal }) => {
   };
 
   const handeScenario = (item, ind) => {
-    dispatch(setAIType({ ...item, ind }));
-    localStorage.setItem("currScenario", JSON.stringify({ ...item, ind }));
+    const scenario = { ...item, ind, profileImg: imgList[ind] }
+    dispatch(setAIType(scenario));
+    localStorage.setItem("currScenario", JSON.stringify(scenario));
     if (setIsScenrioModal) {
       setIsScenrioModal(false);
     }

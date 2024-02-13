@@ -38,7 +38,7 @@ export default function LoginForm() {
         const user = { email, id: response?.data?.data };
         localStorage.setItem("user", JSON.stringify(user));
         dispatch(setAuthUser(user));
-        Cookies.set("user", JSON.stringify(user));
+        Cookies.set("user", JSON.stringify(user),{ expires: 7 });
         router.push("/");
         toast.success("Login Successfully!");
       } else {
