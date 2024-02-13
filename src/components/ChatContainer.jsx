@@ -278,12 +278,14 @@ const ChatContainer = () => {
   };
   return (
     <>
-      <Container maxWidth={"xl"}>
+      <Container maxWidth={"xl"} sx={{ position:'relative'}}>
         <Box
           sx={{
             maxHeight: "80vh",
             height: { xs: "75vh", md: "74vh", lg: "79vh" },
             overflow: "auto",
+            padding:'0px 8px'
+           
           }}
           ref={messageContainerRef}
           onScroll={() => { handleScroll();}}
@@ -350,8 +352,10 @@ const ChatContainer = () => {
                       <HighlightPopover
                         selectedText={selectedText}
                         id={item.id}
+                        item={item}
                         loading={loading}
                         videoLookUp={videoLookUp}
+                        handleWrongFeedback={handleWrongFeedback}
                       >
                         <Typography
                           component={"span"}
@@ -380,7 +384,7 @@ const ChatContainer = () => {
                         </Typography>
                       </HighlightPopover>
                       {/* ========== Translation ============ */}
-                      {/* {item?.role === "assistant" ? (
+                      {item?.role === "assistant" ? (
                         <>
                           <Box
                             component={"div"}
@@ -412,7 +416,7 @@ const ChatContainer = () => {
                         </>
                       ) : (
                         ""
-                      )} */}
+                      )}
 
                       <Typography
                         component={"span"}

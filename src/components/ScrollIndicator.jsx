@@ -8,14 +8,14 @@ const ScrollIndicator = ({
   showScrollIndicator,
   setShowScrollIndicator,
 }) => {
-  
+
 
   return (
     <>
       {showScrollIndicator ? (
         <Box
-          position="fixed"
-          bottom={100}
+          position="absolute"
+          bottom={80}
           right={40}
           zIndex={1000}
           transition="bottom 0.3s ease"
@@ -25,7 +25,7 @@ const ScrollIndicator = ({
               sx={{
                 borderRadius: "50%",
                 background: "white",
-                border: "1px solid #d9fdd3",
+                border: "1px solid #dceaf8",
               }}
               variant="contained"
               onClick={() => handleScrollDown()}

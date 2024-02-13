@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { Chip, Typography } from "@mui/material";
+import Feedback from "./Feedback";
 
 export default function HighlightPopover({
   children,
@@ -12,6 +13,8 @@ export default function HighlightPopover({
   // id,
   loading,
   videoLookUp,
+  handleWrongFeedback,
+  item
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -45,33 +48,95 @@ export default function HighlightPopover({
           horizontal: "left",
         }}
       >
-        {selectedText.highlightText ? <>
-          <Box
-            sx={{
-              display: "flex",
-              width: '350px',
-              height:'200px',
-              minHeight: '100px',
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {loading ? (
-              <CircularProgress />
-            ) : videoLookUp?.data ? (
-              <video
-                muted={false}
-                src={videoLookUp?.data}
-                style={{ width: "100%", height: "100%" }}
-                controls
-                autoPlay
-              ></video>) : ""}
-          </Box>
-        </>
+        {selectedText.highlightText ?
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                minWidth: '350px',
+                height: 'auto',
+                minHeight: '100px',
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {loading ? (
+                <CircularProgress />
+              ) :
+                <VideoBox videoSrc={videoLookUp?.data} selectedText={selectedText} handleWrongFeedback={handleWrongFeedback} item={item} />
+              }
+            </Box>
+          </>
           : ""}
-      </Popover>
+      </Popover >
     </>
   );
+}
+
+const VideoBox = ({ videoSrc, selectedText,handleWrongFeedback,item }) => {
+
+  return (
+    <>
+      <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: "center", width: "200px", height: '200px' }}>
+          {videoSrc ?
+            <video
+              muted={false}
+              src={videoSrc}
+              style={{ width: "100%", height: "100%" }}
+              controls
+              autoPlay
+            >
+
+            </video> :
+            <Typography component={"span"} style={{ textAlign: "center", alignSelf: 'center', margin: "0px auto" }} fontSize={"0.9rem"}>
+              Video not Found !
+            </Typography>}
+        </Box>
+
+
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              margin: '5px',
+              width: "250px",
+              overflow: 'auto',
+              minHeight:'200px',
+              maxHeight: '200px',
+              background: '#ede9e9',
+              padding: '4px',
+              borderRadius: '4px',
+              fontSize: '0.8rem'
+            }}
+
+          >
+            <Typography variant="subtitle2" sx={{ fontWeight: '600' }}>Senetence:</Typography>
+            <Typography variant="caption">{selectedText.highlightText}</Typography>
+          </Box>
+          {/* <Box sx={{
+            margin: '5px',
+            width: '250px', maxHeight: '100px', overflow: 'auto', background: '#ede9e9', borderRadius: '4px',
+            fontSize: '0.8rem', padding: '4px'
+          }}>
+            <Feedback
+              title={"Translation:"}
+              type={"translation"}
+              content={item.translation}
+              item={item}
+              id={item._id}
+              handleWrongFeedback={handleWrongFeedback}
+            />
+
+            <Typography variant="subtitle2" sx={{ fontWeight: '600' }}>Translation:</Typography>
+
+            <Typography variant="caption">{selectedText.highlightText}</Typography>
+          </Box> */}
+        </Box>
+
+      </Box>
+
+    </>
+  )
 }
 
 // return (
