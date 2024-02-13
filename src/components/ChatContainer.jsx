@@ -25,19 +25,20 @@ import { useSelector } from "react-redux";
 import ScenarioBar from "./ScenarioBar";
 import ScrollIndicator from "./ScrollIndicator";
 
-const MessageContainer = styled(Paper)(({ theme, isOwnMessage, isTranslation }) => ({
+// Styled Box component for message container
+const MessageContainer = styled(Box)(({ theme, isownmessage, isTranslation }) => ({
   position: "relative",
-  maxWidth: "70%",
-  minWidth: isOwnMessage ? "85px" : "150px",
+  maxWidth: "60%",
+  minWidth: isownmessage ? "85px" : "150px",
   width: "fit-content",
   padding: "0.3rem 0.5rem 1.5rem 1rem",
   borderRadius: "10px",
-  marginLeft: isOwnMessage ? "auto" : 0,
-  marginRight: isOwnMessage ? 0 : "auto",
+  marginLeft: isownmessage ? "auto" : 0,
+  marginRight: isownmessage ? 0 : "auto",
   marginBottom: "7px",
-  backgroundColor: isOwnMessage ? "#fafafa00" : isTranslation ? "#fafafa00" : "#d9fdd3",
+  backgroundColor: isownmessage ? "#fafafa00" : isTranslation ? "#fafafa00" : "#d9fdd3",
   border: "1px solid #a9a9a9",
-  color: isOwnMessage ? "#000" : "black",
+  color: isownmessage ? "#000" : "black",
   cursor: "pointer",
   boxShadow: 'none'
 }));
@@ -57,6 +58,7 @@ const ChatContainer = () => {
   const messageContainerRef = useRef(null);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
 
+  // when scenario selected get all Chat
   useEffect(() => {
     window.document.title = "SignLab AS";
     setIsLoading(true);
@@ -65,6 +67,7 @@ const ChatContainer = () => {
     }
   }, [selectedScenario]);
 
+  // Function to fetch all chat messages
   const getAllChat = async () => {
     try {
       const response = await axios.post(`${API_URL}/chat/get_conversation`, {
@@ -81,6 +84,7 @@ const ChatContainer = () => {
     }
   };
 
+  // Function to handle sending message
   const handleSend = async (userMessage) => {
     if (userMessage.trim() === "") {
       return;
@@ -104,6 +108,7 @@ const ChatContainer = () => {
     }
   };
 
+  // Function to send message to the server
   const sendMessage = async (message, preMsg) => {
     try {
       const res = await axios.post(`${API_URL}/chat/conversation`, {
@@ -125,10 +130,12 @@ const ChatContainer = () => {
     }
   };
 
+  // Effect to scroll down when new message is added
   useEffect(() => {
     handleScrollDown();
   }, [messages]);
 
+  // Function to convert message using ASL conversion
   const messageConversion = async (message, preMsg) => {
     try {
       const res = await axios.post(`${API_URL}/chat/asl_conversion`, {
@@ -155,6 +162,7 @@ const ChatContainer = () => {
     }
   };
 
+  // Function to handle text selection
   const handleSelection = (id) => {
     const container = document.getElementById("message" + id);
     const selection = window.getSelection();
@@ -172,6 +180,7 @@ const ChatContainer = () => {
     }
   };
 
+  // Function to search word
   const serachWord = async (highlightText) => {
     setLoading(true);
     try {
@@ -197,11 +206,13 @@ const ChatContainer = () => {
     }
   };
 
+  // Function to handle wrong feedback
   const handleWrongFeedback = (type, id) => {
     setWrongFeedback({ type, id });
     setIsDialogOpen(true);
   };
 
+  // Function to scroll down message container
   const handleScrollDown = () => {
     messageContainerRef?.current.scrollTo({
       top: messageContainerRef.current.scrollHeight,
@@ -209,6 +220,7 @@ const ChatContainer = () => {
     });
   };
 
+  // Function to handle scroll event
   const handleScroll = () => {
     const container = messageContainerRef?.current;
     if (container) {
@@ -274,7 +286,7 @@ const ChatContainer = () => {
                       <MessageContainer
                         key={item.id}
                         elevation={3}
-                        isOwnMessage={item?.role === "user"}
+                        isownmessage={item?.role === "user"}
                         onClick={() => handleSelection(item._id)}
                       >
                         {item.role === "assistant" ?
@@ -334,7 +346,7 @@ const ChatContainer = () => {
                         <MessageContainer
                           key={item.id}
                           elevation={3}
-                          isOwnMessage={item?.role === "user"}
+                          isownmessage={item?.role === "user"}
                           onClick={() => handleSelection(item._id)}
                           isTranslation={true}
                         >
@@ -387,7 +399,12 @@ const ChatContainer = () => {
                   </Box>
                 </>
               ))}
-              <TypingIndicator typing={typingIndiacator} />
+
+              {typingIndiacator?
+              <Box sx={{display:'flex'}}>
+                <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} />
+                <TypingIndicator typing={typingIndiacator} />
+              </Box>:""}
             </>
           )}
         </Box>
