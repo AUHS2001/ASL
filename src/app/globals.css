@@ -3,7 +3,25 @@
 body{
   margin:0;
   padding: 0;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  color: rgb(52, 49, 76);
+  background-color:#fafafa;
+  line-height:1.5;
+  font-weight: 400;
+  font-size:14px;
+  letter-spacing: 0.00938em;
 }
+
+.bg-tech{
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.loginFrom-wraper{
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
 .chatContainer {
   padding: 16px; /* Adjust as needed */
 }
@@ -11,7 +29,44 @@ body{
 .typingIndicator {
   font-style: italic;
   color: #888; /* Adjust the color as needed */
-  animation: typingAnimation 1s infinite;
+  /* animation: typingAnimation 1s infinite; */
+}
+
+
+@keyframes typing {
+  0%,
+  75%,
+  100% {
+    transform: translate(0, 0.25em) scale(0.9);
+    opacity: 0.3;
+  }
+
+  25% {
+    transform: translate(0, -0.25em) scale(1);
+    opacity: 1;
+  }
+}
+
+.typing {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 0.3em;
+  box-sizing: border-box;
+  background: #50a742;
+  border-radius: 50%;
+}
+
+.typing.typing-1 {
+  animation: typing 3s infinite;
+}
+
+.typing.typing-2 {
+  animation: typing 3s 250ms infinite;
+}
+
+.typing.typing-3 {
+  animation: typing 3s 500ms infinite;
 }
 .highlight {
   /* background-color: rgb(255, 145, 0); */
@@ -36,6 +91,7 @@ body{
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 /* Track */

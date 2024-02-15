@@ -1,6 +1,8 @@
 import "./globals.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Providers } from "@/store/Providers";
+
 
 export const metadata = {
   title: "SignLab AS",
@@ -20,7 +22,7 @@ export default function RootLayout({ children }) {
           rtl={false}
           theme="light"
         />
-       {children}
+       <Providers>{children}</Providers>
       </body>
     </html>
   );

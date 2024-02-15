@@ -1,0 +1,13 @@
+.results-list {
+  position: absolute;
+  bottom: 60px;
+  left: 0px;
+  width: 98%;
+  background-color: white;
+  display: flex;
+  padding: 5px 10px;
+  box-shadow: 0px 0px 8px #ddd;
+  border-radius: 10px;
+  max-width: 100%;
+  overflow-x: auto;
+}
