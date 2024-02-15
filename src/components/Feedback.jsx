@@ -37,7 +37,7 @@ const Feedback = (props) => {
       setIsfeedback("best");
       submitFeedback(type, id, "best");
     } else if (feedbackType === "wrong" && isfeedback !== "wrong") {
-      // submitFeedback(type, id, "wrong");
+      submitFeedback(type, id, "wrong");
       setIsfeedback("wrong");
       handleWrongFeedback(type, id);
     } else {

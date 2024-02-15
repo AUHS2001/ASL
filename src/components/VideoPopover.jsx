@@ -62,12 +62,12 @@ const VideoBox = ({ videoSrc, selectedText, }) => {
     return (
         <>
             <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
-                <Box sx={{ display: 'flex', justifyContent: "center", width: "200px", height: '220px' }}>
+                <Box sx={{ display: 'flex', justifyContent: "center", width: "200px", height: '215px',margin:'5px' }}>
                     {videoSrc ?
                         <video
                             muted={false}
                             src={videoSrc}
-                            style={{ width: "100%", height: "100%" }}
+                            style={{ width: "100%", height: "100%",borderRadius:'5px' }}
                             controls
                             autoPlay
                         >

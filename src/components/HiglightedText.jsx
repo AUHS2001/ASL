@@ -41,7 +41,9 @@ const HighlightedText = ({ content,selectedText, setSelectedText, item,serachWor
       return (
         <React.Fragment key={index}>
           {wordsData[cleanedWord.toLowerCase()] ? (
-            <span className={"highlight"} onClick={(e) => { handleWordClick(e,item?._id, word) }}>
+            <span className={"highlight"}
+            //  onClick={(e) => { handleWordClick(e,item?._id, word) }}
+             >
               {word}
             </span>
           ) : (
