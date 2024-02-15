@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Card, lighten, styled } from "@mui/material";
-import { H4, Paragraph } from "../components/Common/Typography";
+import { H4, Paragraph } from "./Common/Typography";
 import { useSelector } from "react-redux";
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -11,7 +11,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   background: lighten(theme.palette.primary.main, 0.85),
 }));
 
-const ScenarioBar = () => {
+const MessageBar = () => {
     const selectedScenario = useSelector((state) => state?.aiType?.scenario);
 
   return (
@@ -29,4 +29,4 @@ const ScenarioBar = () => {
   );
 };
 
-export default ScenarioBar;
+export default MessageBar;

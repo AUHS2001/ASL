@@ -1,20 +1,15 @@
 "use client";
 import * as React from "react";
 import Popover from "@mui/material/Popover";
-import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { Chip, Typography } from "@mui/material";
-import Feedback from "./Feedback";
+import {Typography } from "@mui/material";
 
 export default function HighlightPopover({
   children,
   selectedText,
-  // id,
   loading,
   videoLookUp,
-  handleWrongFeedback,
-  item
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -28,6 +23,7 @@ export default function HighlightPopover({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log("videolookup", videoLookUp)
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -63,7 +59,10 @@ export default function HighlightPopover({
               {loading ? (
                 <CircularProgress />
               ) :
-                <VideoBox videoSrc={videoLookUp?.data} selectedText={selectedText} handleWrongFeedback={handleWrongFeedback} item={item} />
+                <VideoBox
+                  videoSrc={videoLookUp?.video_url}
+                  selectedText={videoLookUp?.translation}
+                   />
               }
             </Box>
           </>
@@ -73,7 +72,7 @@ export default function HighlightPopover({
   );
 }
 
-const VideoBox = ({ videoSrc, selectedText,handleWrongFeedback,item }) => {
+const VideoBox = ({ videoSrc, selectedText, }) => {
 
   return (
     <>
@@ -101,7 +100,7 @@ const VideoBox = ({ videoSrc, selectedText,handleWrongFeedback,item }) => {
               margin: '5px',
               width: "250px",
               overflow: 'auto',
-              minHeight:'200px',
+              minHeight: '200px',
               maxHeight: '200px',
               background: '#ede9e9',
               padding: '4px',
@@ -111,7 +110,7 @@ const VideoBox = ({ videoSrc, selectedText,handleWrongFeedback,item }) => {
 
           >
             <Typography variant="subtitle2" sx={{ fontWeight: '600' }}>Senetence:</Typography>
-            <Typography variant="caption">{selectedText.highlightText}</Typography>
+            <Typography variant="caption">{selectedText}</Typography>
           </Box>
           {/* <Box sx={{
             margin: '5px',

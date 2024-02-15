@@ -11,7 +11,6 @@ import {
   styled,
 } from "@mui/material";
 import UserInput from "./UserInput";
-import HighlightPopover from "./HighlightPopover";
 import TypingIndicator from "./TypingIndicator";
 import { toast } from "react-toastify";
 import HiglightedText from "./HiglightedText";
@@ -22,8 +21,9 @@ import Loader from "./Common/Loader";
 import MyDialog from "./Common/MyDialog";
 import WrongFeedback from "./WrongFeedback";
 import { useSelector } from "react-redux";
-import ScenarioBar from "./ScenarioBar";
+import MessageBar from "./MessageBar";
 import ScrollIndicator from "./ScrollIndicator";
+import VideoPopover from "./VideoPopover";
 
 // Styled Box component for message container
 const MessageContainer = styled(Box)(({ theme, isownmessage, isTranslation }) => ({
@@ -57,6 +57,7 @@ const ChatContainer = () => {
   const selectedScenario = useSelector((state) => state?.aiType?.scenario);
   const messageContainerRef = useRef(null);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   // when scenario selected get all Chat
   useEffect(() => {
@@ -189,7 +190,7 @@ const ChatContainer = () => {
       });
       if (res?.data?.status_code == 200) {
         setLoading(false);
-        setVideoLookUp(res.data);
+        setVideoLookUp(res.data.data);
       } else {
         toast.warn("Select again this word", {
           position: "top-right",
@@ -229,6 +230,23 @@ const ChatContainer = () => {
       setShowScrollIndicator(!isAtBottom);
     }
   };
+
+
+//=============== Video Popover ===========
+  const handleClick = (event) => {
+    console.log(selectedText?.highlightText, "selectedText.highlightText");
+    if (selectedText?.highlightText) {
+      setAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedText(null)
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   return (
     <>
@@ -277,11 +295,23 @@ const ChatContainer = () => {
                 </span>
               </Box>
 
-              <ScenarioBar />
+              <MessageBar />
+              <VideoPopover
+                id={id}
+                open={open}
+                handleClose={handleClose}
+                anchorEl={anchorEl}
+                selectedText={selectedText}
+                loading={loading}
+                videoLookUp={videoLookUp}
+              />
+
               {messages.map((item) => (
                 <>
                   <Box sx={{ display: 'flex', width: '100%' }}>
-                    {item.role === "assistant" ? <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} /> : ""}
+                    {item.role === "assistant" ? 
+                    <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} /> : ""}
+
                     <Box sx={{ display: 'flex', flexDirection: "column", width: '100%' }}>
                       <MessageContainer
                         key={item.id}
@@ -298,32 +328,33 @@ const ChatContainer = () => {
                             id={item._id}
                             handleWrongFeedback={handleWrongFeedback}
                           /> : ""}
-                        <HighlightPopover
-                          selectedText={selectedText}
-                          id={item.id}
-                          item={item}
-                          loading={loading}
-                          videoLookUp={videoLookUp}
-                          handleWrongFeedback={handleWrongFeedback}
+
+                        <Typography
+                          component={"span"}
+                          id={"message" + item._id}
+                          style={{
+                            wordBreak: "break-word",
+                            overflowWrap: "anywhere",
+                            fontSize: "0.9rem",
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                          }}
+                          aria-describedby={id} 
+                          variant="contained" 
+                          onClick={handleClick}
                         >
-                          <Typography
-                            component={"span"}
-                            id={"message" + item._id}
-                            style={{
-                              wordBreak: "break-word",
-                              overflowWrap: "anywhere",
-                              fontSize: "0.9rem",
-                              display: "flex",
-                              flexWrap: "wrap",
-                              alignItems: "center",
-                            }}
-                          >
-                            <HiglightedText
-                              content={item.message}
-                              setSelectedText={setSelectedText}
-                            />
-                          </Typography>
-                        </HighlightPopover>
+                          <HiglightedText
+                            content={item.message}
+                            setSelectedText={setSelectedText}
+                            selectedText={selectedText}
+                            item={item}
+                            serachWord={serachWord}
+                            handleClick={handleClick}
+                            setAnchorEl={setAnchorEl}
+                          />
+                        </Typography>
+
                         <Typography
                           component={"span"}
                           variant="caption"
@@ -342,6 +373,8 @@ const ChatContainer = () => {
                           {formatStringToTime(item?.timestamp)}
                         </Typography>
                       </MessageContainer>
+
+                      {/* ============= Show Only For Ai side ============= */}
                       {item.role === "assistant" ?
                         <MessageContainer
                           key={item.id}
@@ -400,11 +433,11 @@ const ChatContainer = () => {
                 </>
               ))}
 
-              {typingIndiacator?
-              <Box sx={{display:'flex'}}>
-                <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} />
-                <TypingIndicator typing={typingIndiacator} />
-              </Box>:""}
+              {typingIndiacator ?
+                <Box sx={{ display: 'flex' }}>
+                  <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} />
+                  <TypingIndicator typing={typingIndiacator} />
+                </Box> : ""}
             </>
           )}
         </Box>
