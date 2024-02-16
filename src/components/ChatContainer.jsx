@@ -6,7 +6,7 @@ import {
   Avatar,
   Box,
   Container,
-  Paper,
+  IconButton,
   Typography,
   styled,
 } from "@mui/material";
@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import MessageBar from "./MessageBar";
 import ScrollIndicator from "./ScrollIndicator";
 import VideoPopover from "./VideoPopover";
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 
 // Styled Box component for message container
 const MessageContainer = styled(Box)(({ theme, isownmessage, isTranslation }) => ({
@@ -232,7 +233,7 @@ const ChatContainer = () => {
   };
 
 
-//=============== Video Popover ===========
+  //=============== Video Popover ===========
   const handleClick = (event) => {
     console.log(selectedText?.highlightText, "selectedText.highlightText");
     if (selectedText?.highlightText) {
@@ -309,8 +310,8 @@ const ChatContainer = () => {
               {messages.map((item) => (
                 <>
                   <Box sx={{ display: 'flex', width: '100%' }}>
-                    {item.role === "assistant" ? 
-                    <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} /> : ""}
+                    {item.role === "assistant" ?
+                      <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} /> : ""}
 
                     <Box sx={{ display: 'flex', flexDirection: "column", width: '100%' }}>
                       <MessageContainer
@@ -340,8 +341,8 @@ const ChatContainer = () => {
                             flexWrap: "wrap",
                             alignItems: "center",
                           }}
-                          aria-describedby={id} 
-                          variant="contained" 
+                          aria-describedby={id}
+                          variant="contained"
                           onClick={handleClick}
                         >
                           <HiglightedText
@@ -366,10 +367,12 @@ const ChatContainer = () => {
                             right: "8px",
                             width: "100%",
                             display: "flex",
+                            alignItems:'center',
                             justifyContent: "flex-end",
                             userSelect: "none",
                           }}
                         >
+                          {item.role === "user" ? <IconButton size="small"><SettingsBackupRestoreIcon sx={{ fontSize: "1rem" }} /></IconButton> : ""}
                           {formatStringToTime(item?.timestamp)}
                         </Typography>
                       </MessageContainer>
