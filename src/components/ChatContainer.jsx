@@ -1,22 +1,14 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { API_URL } from "@/constant/ApiUrl";
 import {
   Avatar,
   Box,
   Container,
-  IconButton,
-  Typography,
-  styled,
 } from "@mui/material";
 import UserInput from "./UserInput";
 import TypingIndicator from "./TypingIndicator";
 import { toast } from "react-toastify";
-import HiglightedText from "./HiglightedText";
-import { formatStringToTime } from "@/utils/formatTime";
 import { checkCase } from "@/utils/helper";
-import Feedback from "./Feedback";
 import Loader from "./Common/Loader";
 import MyDialog from "./Common/MyDialog";
 import WrongFeedback from "./WrongFeedback";
@@ -24,25 +16,10 @@ import { useSelector } from "react-redux";
 import MessageBar from "./MessageBar";
 import ScrollIndicator from "./ScrollIndicator";
 import VideoPopover from "./VideoPopover";
-import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
+import MessageBubble from "./MessageBubble";
+import { getAllChat, messageConversion, sendMessage,searchVideoLookup } from "@/utils/apiCalling";
 
-// Styled Box component for message container
-const MessageContainer = styled(Box)(({ theme, isownmessage, isTranslation }) => ({
-  position: "relative",
-  maxWidth: "60%",
-  minWidth: isownmessage ? "85px" : "150px",
-  width: "fit-content",
-  padding: "0.3rem 0.5rem 1.5rem 1rem",
-  borderRadius: "10px",
-  marginLeft: isownmessage ? "auto" : 0,
-  marginRight: isownmessage ? 0 : "auto",
-  marginBottom: "7px",
-  backgroundColor: isownmessage ? "#fafafa00" : isTranslation ? "#fafafa00" : "#d9fdd3",
-  border: "1px solid #a9a9a9",
-  color: isownmessage ? "#000" : "black",
-  cursor: "pointer",
-  boxShadow: 'none'
-}));
+
 
 const ChatContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -60,31 +37,34 @@ const ChatContainer = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+
+
+  // Function to fetch all chat messages
+  const handleGetAllChat = async () => {
+    setIsLoading(true)
+    const resp = await getAllChat(user, selectedScenario)
+    if (resp) {
+      setMessages(resp.data);
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+
+  };
+
   // when scenario selected get all Chat
   useEffect(() => {
-    window.document.title = "SignLab AS";
+    window.document.title = `SignLab AS - ${selectedScenario?.name}`;
     setIsLoading(true);
     if (selectedScenario) {
-      getAllChat();
+      handleGetAllChat();
+    }
+    return ()=>{
+      setMessages([])
     }
   }, [selectedScenario]);
 
-  // Function to fetch all chat messages
-  const getAllChat = async () => {
-    try {
-      const response = await axios.post(`${API_URL}/chat/get_conversation`, {
-        user_id: user?.id,
-        scenario_id: selectedScenario?._id,
-      });
-      if (response?.data?.status_code === 200) {
-        setMessages(response.data.data);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error getAllChat", error);
-    }
-  };
+
 
   // Function to handle sending message
   const handleSend = async (userMessage) => {
@@ -102,33 +82,25 @@ const ChatContainer = () => {
     let preMsg = [...messages, newMessage];
     setMessages(preMsg);
     setTypingIndiacator(true);
-
     if (checkCase(userMessage) === "Uppercase") {
-      sendMessage(userMessage, preMsg);
+      handleSendMessage(userMessage, preMsg);
     } else {
-      messageConversion(userMessage, preMsg);
+      handleMessageConversion(userMessage, preMsg);
     }
   };
 
   // Function to send message to the server
-  const sendMessage = async (message, preMsg) => {
-    try {
-      const res = await axios.post(`${API_URL}/chat/conversation`, {
-        user_msg: message,
-        user_id: user?.id,
-        scenario_id: selectedScenario._id,
-        scene_id: selectedScenario.scene_id,
-      });
-      if (res?.data?.status_code == 200) {
-        const receivedMessage = res?.data?.data;
-        setTypingIndiacator(false);
-        let updatedMsg = [...preMsg, receivedMessage];
-        setMessages(updatedMsg);
-      } else {
-        toast.error("Something Went Worng!");
-      }
-    } catch (err) {
-      console.error(err);
+  const handleSendMessage = async (inputMsg,preMsg) => {
+
+    const resp = await sendMessage(inputMsg,user,selectedScenario);
+    if (resp?.data) {
+      const receivedMessage = resp?.data?.data;
+      setTypingIndiacator(false);
+      let updatedMsg = [...preMsg, receivedMessage];
+      setMessages(updatedMsg);
+    }
+    else {
+      setTypingIndiacator(false);
     }
   };
 
@@ -137,30 +109,20 @@ const ChatContainer = () => {
     handleScrollDown();
   }, [messages]);
 
-  // Function to convert message using ASL conversion
-  const messageConversion = async (message, preMsg) => {
-    try {
-      const res = await axios.post(`${API_URL}/chat/asl_conversion`, {
-        user_msg: message,
-        user_id: user?.id,
-        scenario_id: selectedScenario._id,
-        scene_id: selectedScenario.scene_id,
-      });
-      if (res?.data?.status_code == 200) {
-        const newMessage = {
-          _id: messages.length + 1,
-          message: res?.data?.data,
-          timestamp: new Date(),
-          role: "user",
-        };
-        let updatedMsg = [...preMsg, newMessage];
-        setMessages(updatedMsg);
-        sendMessage(res?.data?.data, updatedMsg);
-      } else {
-        toast.error("Something Went Worng!");
-      }
-    } catch (err) {
-      console.error(err);
+  // When user send lowercase message when this 
+  // function to convert message using ASL conversion
+  const handleMessageConversion = async (inputMsg, preMsg) => {
+    const resp = await messageConversion(inputMsg,user,selectedScenario)
+    if (resp) {
+      const newMessage = {
+        _id: messages.length + 1,
+        message: resp?.data?.data,
+        timestamp: new Date(),
+        role: "user",
+      };
+      let updatedMsg = [...preMsg, newMessage];
+      setMessages(updatedMsg);
+      handleSendMessage(resp?.data?.data, updatedMsg);
     }
   };
 
@@ -177,35 +139,23 @@ const ChatContainer = () => {
 
       if (highlightText) {
         setSelectedText({ id, highlightText });
-        serachWord(highlightText);
+        handlesearchVideoLookup(highlightText);
       }
     }
   };
 
   // Function to search word
-  const serachWord = async (highlightText) => {
+  const handlesearchVideoLookup = async (highlightText) => {
     setLoading(true);
-    try {
-      const res = await axios.post(`${API_URL}/chat/video_lookup`, {
-        context: highlightText,
-      });
-      if (res?.data?.status_code == 200) {
-        setLoading(false);
-        setVideoLookUp(res.data.data);
-      } else {
-        toast.warn("Select again this word", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          theme: "light",
-        });
-        setLoading(false);
-      }
-    } catch (err) {
+    const resp = await searchVideoLookup(highlightText)
+    if (resp?.data?.data) {
       setLoading(false);
-      console.error(err);
+      setVideoLookUp(resp.data.data);
+    } else {
+      toast.warn("Some thing Wrong please select again this word");
+      setLoading(false);
     }
+
   };
 
   // Function to handle wrong feedback
@@ -307,134 +257,18 @@ const ChatContainer = () => {
                 videoLookUp={videoLookUp}
               />
 
-              {messages.map((item) => (
-                <>
-                  <Box sx={{ display: 'flex', width: '100%' }}>
-                    {item.role === "assistant" ?
-                      <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} /> : ""}
 
-                    <Box sx={{ display: 'flex', flexDirection: "column", width: '100%' }}>
-                      <MessageContainer
-                        key={item.id}
-                        elevation={3}
-                        isownmessage={item?.role === "user"}
-                        onClick={() => handleSelection(item._id)}
-                      >
-                        {item.role === "assistant" ?
-                          <Feedback
-                            title={"Message"}
-                            type={"message"}
-                            content={item.message}
-                            item={item}
-                            id={item._id}
-                            handleWrongFeedback={handleWrongFeedback}
-                          /> : ""}
-
-                        <Typography
-                          component={"span"}
-                          id={"message" + item._id}
-                          style={{
-                            wordBreak: "break-word",
-                            overflowWrap: "anywhere",
-                            fontSize: "0.9rem",
-                            display: "flex",
-                            flexWrap: "wrap",
-                            alignItems: "center",
-                          }}
-                          aria-describedby={id}
-                          variant="contained"
-                          onClick={handleClick}
-                        >
-                          <HiglightedText
-                            content={item.message}
-                            setSelectedText={setSelectedText}
-                            selectedText={selectedText}
-                            item={item}
-                            serachWord={serachWord}
-                            handleClick={handleClick}
-                            setAnchorEl={setAnchorEl}
-                          />
-                        </Typography>
-
-                        <Typography
-                          component={"span"}
-                          variant="caption"
-                          sx={{
-                            fontSize: "0.6rem",
-                            color: "black",
-                            position: "absolute",
-                            bottom: "3px",
-                            right: "8px",
-                            width: "100%",
-                            display: "flex",
-                            alignItems:'center',
-                            justifyContent: "flex-end",
-                            userSelect: "none",
-                          }}
-                        >
-                          {item.role === "user" ? <IconButton size="small"><SettingsBackupRestoreIcon sx={{ fontSize: "1rem" }} /></IconButton> : ""}
-                          {formatStringToTime(item?.timestamp)}
-                        </Typography>
-                      </MessageContainer>
-
-                      {/* ============= Show Only For Ai side ============= */}
-                      {item.role === "assistant" ?
-                        <MessageContainer
-                          key={item.id}
-                          elevation={3}
-                          isownmessage={item?.role === "user"}
-                          onClick={() => handleSelection(item._id)}
-                          isTranslation={true}
-                        >
-                          <Box
-                            component={"div"}
-                            sx={{
-                              marginTop: "5px",
-                              fontSize: "0.7rem",
-                              width: "100%",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <Feedback
-                              title={"Translation"}
-                              type={"translation"}
-                              content={item.translation}
-                              item={item}
-                              id={item._id}
-                              handleWrongFeedback={handleWrongFeedback}
-                            />
-
-                            <Typography
-                              variant="caption"
-                              display="block"
-                              gutterBottom
-                            >
-                              {item.translation}
-                            </Typography>
-                          </Box>
-                          <Typography
-                            component={"span"}
-                            variant="caption"
-                            sx={{
-                              fontSize: "0.6rem",
-                              color: "black",
-                              position: "absolute",
-                              bottom: "3px",
-                              right: "8px",
-                              width: "100%",
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              userSelect: "none",
-                            }}
-                          >
-                            {formatStringToTime(item?.timestamp)}
-                          </Typography>
-                        </MessageContainer> : ""}
-                    </Box>
-                  </Box>
-                </>
-              ))}
+              <MessageBubble
+                messages={messages}
+                handleSelection={handleSelection}
+                handleClick={handleClick}
+                selectedText={selectedText}
+                setSelectedText={setSelectedText}
+                setAnchorEl={setAnchorEl}
+                handleWrongFeedback={handleWrongFeedback}
+                id={id}
+                handlesearchVideoLookup={handlesearchVideoLookup}
+              />
 
               {typingIndiacator ?
                 <Box sx={{ display: 'flex' }}>
@@ -449,6 +283,7 @@ const ChatContainer = () => {
             handleSend={handleSend}
             inputMessage={inputMessage}
             setInputMessage={setInputMessage}
+            typingIndiacator={typingIndiacator}
           />
         )}
       </Container>

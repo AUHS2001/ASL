@@ -14,7 +14,7 @@ import SearchList from "@/components/SearchList";
 import "../styles/UserInput.css";
 import { useDebounce } from "@/utils/hooks";
 
-const UserInput = ({ handleSend }) => {
+const UserInput = ({ handleSend,typingIndiacator }) => {
   const [keyWords, setKeyWords] = useState([]);
   const [msgInput, setMsgInput] = useState("");
   const debouncedValue = useDebounce(msgInput, 500);
@@ -85,6 +85,7 @@ const UserInput = ({ handleSend }) => {
                 onChange={(e) => {
                   setMsgInput(e.target.value);
                 }}
+                disabled={typingIndiacator}
                 value={msgInput}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -95,7 +96,7 @@ const UserInput = ({ handleSend }) => {
                   }
                 }}
               />
-              <IconButton onClick={() => handleMsgSend()}>
+              <IconButton onClick={() => handleMsgSend()}  disabled={typingIndiacator}>
                 <SendIcon />
               </IconButton>
             </Paper>

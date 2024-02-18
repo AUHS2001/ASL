@@ -62,7 +62,7 @@ const VideoBox = ({ videoSrc, selectedText, }) => {
     return (
         <>
             <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
-                <Box sx={{ display: 'flex', justifyContent: "center", width: "200px", height: '215px',margin:'5px' }}>
+                <Box sx={{ display: 'flex', justifyContent: "center", width: "250px", height: '215px',margin:'5px' }}>
                     {videoSrc ?
                         <video
                             muted={false}
@@ -90,13 +90,13 @@ const VideoBox = ({ videoSrc, selectedText, }) => {
                             background: '#2e312f',
                             padding: '7px',
                             borderRadius: '4px',
-                            fontSize: '0.8rem',
+                            fontSize: '1rem',
                             color:'white'
                         }}
 
                     >
-                        <Typography variant="subtitle2" sx={{ fontWeight: '600' }}>Senetence:</Typography>
-                        <Typography variant="caption">{selectedText}</Typography>
+                        <Typography variant="subtitle2" sx={{ fontSize: '1rem', fontWeight: '600' }}>Translation:</Typography>
+                        <Typography variant="caption" sx={{ fontSize: '0.9rem',}}>{selectedText}</Typography>
                     </Box>
 
                 </Box>
