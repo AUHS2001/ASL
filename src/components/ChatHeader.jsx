@@ -46,7 +46,7 @@ function ChatHeader() {
   };
 
   const profileMenus = [
-    { title: "My account", id: "myAcount", icon: <Avatar sizes="xs" /> },
+    // { title: "My account", id: "myAcount", icon: <Avatar sizes="xs" /> },
     {
       title: "Change Scenario",
       id: "scenario",
@@ -215,7 +215,7 @@ function ChatHeader() {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               {profileMenus.map((item, ind) => (
-                <>
+               
                   <MenuItem
                     onClick={(e) => handleProfileMenu(e, item.id)}
                     key={"profileMenu" + ind}
@@ -223,7 +223,7 @@ function ChatHeader() {
                     <ListItemIcon>{item.icon}</ListItemIcon>
                     {item.title}
                   </MenuItem>
-                </>
+             
               ))}
             </Menu>
           </Toolbar>

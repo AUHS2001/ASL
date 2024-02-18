@@ -15,11 +15,9 @@ const HighlightedText = ({ content,selectedText, setSelectedText, item,serachWor
 
   // Function to handle text selection
   const handleWordClick = (e,id, word) => {
-    const container = document.getElementById("message" + id);
-    const selection = word
-    
-    
-    const highlightText = selection.toString().trim();
+    e.stopPropagation()
+    e.preventDefault()
+    const highlightText = word.toString().trim();
     console.log(selectedText,'ss',!selectedText)
     if (highlightText && !selectedText) {
       setSelectedText({ id, highlightText });
