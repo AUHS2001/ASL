@@ -1,5 +1,5 @@
 "use client"
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
     Avatar,
     Box,
@@ -16,10 +16,11 @@ import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore
 import { chatReview } from "@/utils/apiCalling";
 import CircularProgress from '@mui/material/CircularProgress';
 import MyToolTip from "./Common/MyToolTip";
+import { checkCase } from "@/utils/helper";
 
 
 // Styled Box component for message container
-const MessageContainer = styled(Box)(({isownmessage, isTranslation }) => ({
+const MessageContainer = styled(Box)(({ isownmessage, isTranslation }) => ({
     position: "relative",
     maxWidth: "60%",
     minWidth: isownmessage ? "85px" : "150px",
@@ -124,7 +125,7 @@ const MessageBubble = ({ id, serachWord, messages, handleSelection, handleClick,
                                             sx={{
                                                 wordBreak: "break-word",
                                                 overflowWrap: "anywhere",
-                                                fontSize: "0.7rem",
+                                                fontSize: "0.8rem",
                                                 display: "flex",
                                                 flexWrap: "wrap",
                                                 alignItems: "center",
@@ -156,7 +157,7 @@ const MessageBubble = ({ id, serachWord, messages, handleSelection, handleClick,
                                     >
                                         {loading === index && item.role === "user" ? <Box sx={{ display: 'flex', mr: 1 }}>
                                             <CircularProgress sx={{ height: "15px", width: '15px' }} size={"lg"} />
-                                        </Box> : item.role === "user" ? <MyToolTip title={"Revision"}><IconButton size="small" onClick={() => handleRevision(index)}><SettingsBackupRestoreIcon sx={{ fontSize: "0.9rem" }} /></IconButton></MyToolTip> : ""}
+                                        </Box> : item.role === "user" && checkCase(item.message) === "Uppercase" ? <MyToolTip title={"Revision"}><IconButton size="small" onClick={() => handleRevision(index)}><SettingsBackupRestoreIcon sx={{ fontSize: "0.9rem" }} /></IconButton></MyToolTip> : ""}
                                         {formatStringToTime(item?.timestamp)}
                                     </Typography>
                                 </Box>
