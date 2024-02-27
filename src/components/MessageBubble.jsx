@@ -17,6 +17,7 @@ import { chatReview } from "@/utils/apiCalling";
 import CircularProgress from '@mui/material/CircularProgress';
 import MyToolTip from "./Common/MyToolTip";
 import { checkCase } from "@/utils/helper";
+import { IMAGE_URL } from "@/constant/ApiUrl";
 
 
 // Styled Box component for message container
@@ -74,7 +75,7 @@ const MessageBubble = ({ id, serachWord, messages, handleSelection, handleClick,
                 <>
                     <Box sx={{ display: 'flex', width: '100%' }}>
                         {item.role === "assistant" ?
-                            <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} /> : ""}
+                            <Avatar sizes="xs" src={IMAGE_URL+selectedScenario?.image_url} sx={{ mr: 1 }} /> : ""}
 
                         <Box sx={{ display: 'flex', flexDirection: "column", width: '100%' }}>
                             <MessageContainer

@@ -5,6 +5,7 @@ const SearchList = ({
   setInputMessage,
   handleMsgSend,
   setKeyWords,
+  msgInput,
 }) => {
   const handleClick = (e, word) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ const SearchList = ({
   };
   return (
     <>
-      {results.length > 0 ? (
+      {results.length > 0 && msgInput ? (
         <div className="results-list">
           {results.map((result, ind) => {
             return (

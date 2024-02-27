@@ -18,6 +18,7 @@ import ScrollIndicator from "./ScrollIndicator";
 import VideoPopover from "./VideoPopover";
 import MessageBubble from "./MessageBubble";
 import { getAllChat, messageConversion, sendMessage,searchVideoLookup } from "@/utils/apiCalling";
+import { IMAGE_URL } from "@/constant/ApiUrl";
 
 
 
@@ -272,7 +273,7 @@ const ChatContainer = () => {
 
               {typingIndiacator ?
                 <Box sx={{ display: 'flex' }}>
-                  <Avatar sizes="xs" src={selectedScenario.profileImg} sx={{ mr: 1 }} />
+                  <Avatar sizes="xs" src={IMAGE_URL+selectedScenario?.image_url} sx={{ mr: 1 }} />
                   <TypingIndicator typing={typingIndiacator} />
                 </Box> : ""}
             </>

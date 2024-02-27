@@ -10,6 +10,7 @@ import ScenarioList from "./ScenarioList";
 import ButtonLoader from "./Common/ButtonLoader";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { IMAGE_URL } from "@/constant/ApiUrl";
 
 // ================ styled components ===================
 const Container = styled("div")(({ theme }) => ({
@@ -99,14 +100,10 @@ const ChatAiType = () => {
                     }}
                   >
                     <Image
-                      src={
-                        selectedScenario?.ind
-                          ? imgList?.[selectedScenario?.ind]
-                          : imgList?.[0]
-                      }
+                      src={`${IMAGE_URL}${selectedScenario?.image_url}`}
+                      alt="SelectedScenario"
                       width={150}
                       height={150}
-                      alt={"scenario-logo"}
                     />
                     <Box sx={{ maxWidth: "200px" }}>
                       <Box

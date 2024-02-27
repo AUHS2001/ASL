@@ -59,6 +59,7 @@ const UserInput = ({ handleSend,typingIndiacator }) => {
             setInputMessage={setMsgInput}
             handleMsgSend={handleMsgSend}
             setKeyWords={setKeyWords}
+            msgInput={msgInput}
           />
           <Box
             sx={{

@@ -143,6 +143,8 @@ export const sendMessage = async (inputMsg,user,selectedScenario) => {
     }
   } catch (err) {
     console.error(err);
+    toast.error("Something Went Worng!");
+
   }
 };
 
