@@ -10,6 +10,7 @@ import { getScenarioList } from "@/utils/apiCalling";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { IMAGE_URL } from "@/constant/ApiUrl";
 
 const StyledCard = styled(Card)(({ theme, index, aiScenario }) => ({
   margin: "8px",
@@ -42,7 +43,7 @@ const ScenarioList = ({ setIsScenrioModal }) => {
   const dispatch = useDispatch();
 
   const imgList = [
-    "/images/bot.png",
+    `${IMAGE_URL}/images/scenario/0.webp`,
     "/images/waiter.png",
     "/images/doctor.png",
   ];

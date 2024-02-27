@@ -6,10 +6,17 @@ const nextConfig = {
       {
         source: "/apiUrl/:path*",
         destination:
-          "http://ai-sign-env.eba-z9pwwi3e.us-east-1.elasticbeanstalk.com/:path*", // Add :path* to capture the entire path
+          "http://sign-lab-fyp.eba-z9pwwi3e.us-east-1.elasticbeanstalk.com/:path*",// Add :path* to capture the entire path
+           
       },
+      
     ];
   },
-  
+  images: {
+    domains: [
+      "sign-lab.s3.amazonaws.com",
+      "localhost",
+    ],
+  },
 };
 export default nextConfig;
