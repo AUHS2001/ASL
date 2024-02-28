@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/store/features/userSlice";
+import Link from "next/link";
+import { Typography } from "@mui/material";
 
 export default function LoginForm() {
   const dispatch = useDispatch();
@@ -24,13 +26,15 @@ export default function LoginForm() {
     setIsloading(true);
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
+    const password = data.get("password");
 
     try {
       const response = await axios({
-        url: `${API_URL}/auth/sign_up`,
+        url: `${API_URL}/auth/login`,
         method: "POST",
         data: {
           email: email,
+          password: password
         },
       });
       console.log("Login APi Call", response.data);
@@ -38,7 +42,7 @@ export default function LoginForm() {
         const user = { email, id: response?.data?.data };
         localStorage.setItem("user", JSON.stringify(user));
         dispatch(setAuthUser(user));
-        Cookies.set("user", JSON.stringify(user),{ expires: 7 });
+        Cookies.set("user", JSON.stringify(user), { expires: 7 });
         router.push("/");
         toast.success("Login Successfully!");
       } else {
@@ -48,15 +52,19 @@ export default function LoginForm() {
     } catch (error) {
       console.error("Error calling Login APi", error);
       setIsloading(false);
-      toast.error("Something Went Wrong!");
+      if (error?.response?.data?.message) {
+        toast.error(error.response.data.message);
+    } else {
+        toast.error("Something Went Wrong!");
+    }
     }
   };
 
   return (
     <>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
         <TextField
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           id="email"
@@ -66,16 +74,17 @@ export default function LoginForm() {
           autoFocus
           size="small"
         />
-        {/* <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            /> */}
+
+        <TextField
+          margin="dense"
+          fullWidth
+          required
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          size="small"
+        />
         {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -100,18 +109,15 @@ export default function LoginForm() {
           sx={{ mt: 2, mb: 2 }}
           size="small"
         />
-        <Grid container>
-          {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid> */}
-        </Grid>
+
+      </Box>
+      <Box sx={{ display: "flex" }}>
+        <Typography sx={{ mr: 1, fontSize: '0.9rem' }}>
+          Don`t have an account?
+        </Typography>
+        <Link href="/signin" variant="body2">
+          {"SignUp here."}
+        </Link>
       </Box>
     </>
   );

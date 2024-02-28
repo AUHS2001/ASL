@@ -83,11 +83,11 @@ const ChatContainer = () => {
     let preMsg = [...messages, newMessage];
     setMessages(preMsg);
     setTypingIndiacator(true);
-    // if (checkCase(userMessage) === "Uppercase") {
-    // } else {
-    //   handleMessageConversion(userMessage, preMsg);
-    // }
-    handleSendMessage(userMessage, preMsg);
+    if (checkCase(userMessage) === "Uppercase") {
+      handleSendMessage(userMessage, preMsg);
+    } else {
+      handleMessageConversion(userMessage, preMsg);
+    }
   };
 
   // Function to send message to the server
