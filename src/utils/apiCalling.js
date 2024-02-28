@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 export const getAllChat = async (user, selectedScenario) => {
   try {
     const response = await axios.post(`${API_URL}/chat/get_conversation`, {
-      user_id: user?.id,
+      user_id: user?._id,
       scenario_id: selectedScenario?._id,
     });
     if (response?.data?.status_code === 200) {
@@ -130,7 +130,7 @@ export const sendMessage = async (inputMsg,user,selectedScenario) => {
   try {
     const res = await axios.post(`${API_URL}/chat/conversation`, {
       user_msg: inputMsg,
-      user_id: user?.id,
+      user_id: user?._id,
       scenario_id: selectedScenario._id,
       scene_id: selectedScenario.scene_id,
     });
@@ -153,7 +153,7 @@ export const messageConversion = async (message,user,selectedScenario) => {
   try {
     const res = await axios.post(`${API_URL}/chat/asl_conversion`, {
       user_msg: message,
-      user_id: user?.id,
+      user_id: user?._id,
       scenario_id: selectedScenario._id,
       scene_id: selectedScenario.scene_id,
     });

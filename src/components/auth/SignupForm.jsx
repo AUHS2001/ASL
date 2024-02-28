@@ -40,7 +40,7 @@ export default function SignupForm() {
             });
             console.log("SignUp APi Call", response.data);
             if (response?.data?.status_code === 200) {
-                const user = { email, id: response?.data?.data };
+                const user = response?.data?.data 
                 localStorage.setItem("user", JSON.stringify(user));
                 dispatch(setAuthUser(user));
                 Cookies.set("user", JSON.stringify(user), { expires: 7 });

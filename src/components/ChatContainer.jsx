@@ -43,6 +43,7 @@ const ChatContainer = () => {
   // Function to fetch all chat messages
   const handleGetAllChat = async () => {
     setIsLoading(true)
+    console.log(user,"uu")
     const resp = await getAllChat(user, selectedScenario)
     if (resp) {
       setMessages(resp.data);
@@ -85,7 +86,7 @@ const ChatContainer = () => {
     setTypingIndiacator(true);
     if (checkCase(userMessage) === "Uppercase") {
       handleSendMessage(userMessage, preMsg);
-    } else {
+    } else {  
       handleMessageConversion(userMessage, preMsg);
     }
   };

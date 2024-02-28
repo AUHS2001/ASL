@@ -63,7 +63,8 @@ export default function Home() {
               <Box
                 sx={{
                   my: 5,
-                  mx: 4,
+                  mx: 0,
+                  minWidth:'300px',
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -97,7 +98,7 @@ export default function Home() {
                   </Typography>
                 </Box>
                 <Typography component="h1" variant="h5" color={"#8b8b8b"}>
-                  Log In
+                 LOGIN
                 </Typography>
                 <LoginForm />
                 <Copyright />
